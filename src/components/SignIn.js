@@ -26,7 +26,7 @@ function Signin() {
         <div className="flex flex-col items-center justify-center h-screen">
             <div className='flex flex-col items-center bg-green-50 p-8 signin_css shadow-onboardingShadow'>
             <h2 className="text-3xl font-bold mb-4 ">Login</h2>
-            <p className='mb-8'>Welcome back. Please Select Method to Login:</p>
+            <p className='mb-8 leading-4'>Welcome back. Please Select Method to Login:</p>
             <form onSubmit={handleSubmit} className="flex flex-col">
                 <label for="email" className='text-primarytext mb-2'>Enter your email ID</label>
                 <input 
@@ -55,20 +55,26 @@ function Signin() {
 
                 <button type="submit" className="px-4 py-2 mt-6 bg-primarybtn  text-white rounded transition duration-300 ease-in-out">Login</button>
             </form>
-            <div className="flex items-center justify-center my-8 ">
+            <div className="flex items-center justify-center mt-5 mb-5 ">
       <hr className="border-t border-gray-300 flex-1 mr-1 line-width" />
       <span className="text-gray-500 font-medium mx-1">OR</span>
       <hr className="border-t border-gray-300 flex-1 ml-1 line-width" />
     </div>
+    <GoogleLogin 
+  clientId={clientID}
+  buttonText="Continue with Google"
+  onSuccess={onSuccess}
+  onFailure={onFailure}
+  cookiePolicy={'single_host_origin'}
+  isSignedIn={true}
+  className="w-full justify-center"
+/>
+<div className='flex mt-8'>
+<p className='mr-2'>Don’t have an account?</p>
+<a href='#' className='text-primarytext'>Sign up</a>
+</div>
             </div>
-            <GoogleLogin 
-            clientId = {clientID}
-            buttonText = "Login"
-            onSuccess = {onSuccess}
-            onFailure = {onFailure}
-            cookiePolicy = {'single_host_origin'}
-            isSignedIn = {true}
-            />
+           
 
         </div>
     );
