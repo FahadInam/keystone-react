@@ -1,6 +1,7 @@
 import './App.css';
 import Signin from './components/SignIn';
 import OnBoardingSlider from './components/OnBoardingSlider';
+
 function App() {
   return (
     <div className='flex'>

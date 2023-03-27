@@ -37,13 +37,13 @@ function Signin() {
                 type="email" 
                 placeholder="Email"
 
-                 className="px-4 py-2 border border-gray-400 rounded h-12 mb-4 btn_custom"
+                 className="px-4 py-2 border border-gray-400 rounded h-12  btn_custom"
                 value={values.email }
                 onChange={handleChange}
                 onBlur={handleBlur}
                   />
-                  { errors.email && touched.email ? <span className=''>{errors.email}</span> : null}
-                  <label for="password" className='text-primarytext mb-2'> Password</label>
+                  { errors.email && touched.email ? <span className='text-red-500'>{errors.email}</span> : null}
+                  <label for="password" className='text-primarytext mb-2 mt-2'> Password</label>
                 <input 
                  id="password"
                 name='password'
@@ -56,9 +56,9 @@ function Signin() {
                 onChange={handleChange}
                 onBlur={handleBlur}
                   />
-                 { errors.password && touched.password ? <span className='form-error'>{errors.email}</span> : null}
+                 { errors.password && touched.password ? <span className='form-error text-red-500' >{errors.password}</span> : null}
 
-                <button type="submit" className="px-4 py-2 mt-6 bg-primarybtn  text-white rounded transition duration-300 ease-in-out">Login</button>
+                <button type="submit" className="px-4 py-2 mt-6 bg-primarybtn  text-white  transition duration-300 ease-in-out rounded-lg">Login</button>
             </form>
             <div className="flex items-center justify-center mt-5 mb-5 ">
       <hr className="border-t border-gray-300 flex-1 mr-1 line-width" />
@@ -72,11 +72,11 @@ function Signin() {
   onFailure={onFailure}
   cookiePolicy={'single_host_origin'}
   isSignedIn={true}
-  className="w-full justify-center"
+  className="w-full justify-center google_btn "
 />
 <div className='flex mt-8'>
 <p className='mr-2'>Don’t have an account?</p>
-<a href='#' className='text-primarytext'>Sign up</a>
+<a href='#' className='text-primarytext font-bold'>Sign up</a>
 </div>
             </div>
 

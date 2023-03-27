@@ -25,10 +25,29 @@ code {
 .btn_custom {
 
   width: 472px;
+  background-color: inherit;
+  border: 1px solid #60A498;
+  border-radius: 8px;
 }
 .signin_css {
   border-radius: 8px !important;
 }
 .line-width {
   width: 217px;
+}
+
+.onboarding_text {
+  top: 175px;
+}
+.google_btn {
+  font-size: 1rem !important;
+  border: 1px solid #60A498 !important;
+  border-radius: 8px !important;
+color: #60A498 !important;
+  background-color: inherit !important;
+}
+
+.google_btn > * {
+  background-color: inherit !important;
+
 }
