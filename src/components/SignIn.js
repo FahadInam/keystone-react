@@ -2,6 +2,8 @@ import React from 'react';
 import { GoogleLogin } from 'react-google-login';
 import { useFormik } from 'formik';
 import { SignInSchema } from '../Schemas';
+import logo from '../assets/Logo.png';
+import { Link } from 'react-router-dom';
 const initialValues = {
     email: "",
     password: ""
@@ -23,8 +25,10 @@ function Signin() {
         console.log("here")
     }
     return (
+        
+        <div className="flex flex-col items-center justify-center h-screen relative">
+        <img src={logo} alt="logo" className="ml-20 mt-10 absolute top-0 left-0" />
 
-        <div className="flex flex-col items-center justify-center h-screen">
             <div className='flex flex-col items-center bg-green-50 p-8 signin_css shadow-onboardingShadow'>
             <h2 className="text-3xl font-bold mb-4 ">Login</h2>
             <p className='mb-8 leading-4'>Welcome back. Please Select Method to Login:</p>
@@ -76,7 +80,7 @@ function Signin() {
 />
 <div className='flex mt-8'>
 <p className='mr-2'>Don’t have an account?</p>
-<a href='#' className='text-primarytext font-bold'>Sign up</a>
+<Link to="/signup" className='text-primarytext font-bold'>Sign up</Link>
 </div>
             </div>
 
