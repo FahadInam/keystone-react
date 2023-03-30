@@ -9,8 +9,8 @@ return (
     <div>
 
 <img src={logo} alt="logo" className="ml-20 mt-10 absolute top-0 left-0" />
-<div className="flex flex-col items-center justify-center h-screen relative">
-<div className='flex flex-col items-center bg-green-50 p-8 w-3/12 verification_card shadow-onboardingShadow'>
+<div className="flex flex-col items-center justify-center  relative">
+<div className='flex flex-col items-center mt-64 bg-green-50 p-8 w-3/12 verification_card shadow-onboardingShadow'>
 
 <h2 className="text-2xl font-bold mb-4 ">Check your inbox to verify your email</h2>
 

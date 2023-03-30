@@ -4,7 +4,7 @@ import { useFormik } from 'formik';
 import { Link } from 'react-router-dom';
 import { SignUpSchema } from '../Schemas';
 import logo from '../assets/Logo.png';
-
+import axios from 'axios';
 const initialValues = {
     firstname: "",
     lastname: "",
@@ -34,7 +34,7 @@ function Signup() {
         <div className="flex flex-col items-center justify-center h-screen">
         <img src={logo} alt="logo" className="ml-20 mt-10 absolute top-0 left-0" />
 
-            <div className='flex flex-col items-center bg-green-50 p-8 signin_css shadow-onboardingShadow'>
+            <div className='flex flex-col items-center bg-primaryBackground p-8 signin_css shadow-onboardingShadow'>
             <h2 className="text-4xl font-bold mb-4 ">Sign up</h2>
             <p className='mb-8 leading-4'>Please enter your details:</p>
             <form onSubmit={handleSubmit} className="flex flex-col">
@@ -44,7 +44,7 @@ function Signup() {
                 id="firstname"
                 name='firstname'
                 type="name" 
-                placeholder="Firstname"
+                placeholder="Enter Firstname"
                 value={values.firstname}
                 onChange={handleChange}
                 onBlur={handleBlur}
@@ -57,7 +57,7 @@ function Signup() {
                  id="lastname"
                 name='lastname'
                 type="name"
-                 placeholder="Last Name" 
+                 placeholder="Enter Lastname" 
                  value={values.lastname}
                  onChange={handleChange}
                  onBlur={handleBlur}
@@ -71,7 +71,7 @@ function Signup() {
                  id="email"
                 name='email'
                 type="email"
-                 placeholder="Email" 
+                 placeholder="Enter Email" 
                  value={values.email}
                  onChange={handleChange}
                  onBlur={handleBlur}
@@ -85,7 +85,7 @@ function Signup() {
                  id="password"
                 name='password'
                 type="password"
-                 placeholder="Password" 
+                 placeholder="Create a Password" 
                  value={values.password}
                  onChange={handleChange}
                  onBlur={handleBlur}
@@ -108,7 +108,7 @@ function Signup() {
                   />
                                                      { errors.confirm_password && touched.confirm_password ? <span className='form-error text-red-500' >{errors.confirm_password}</span> : null}
 
-                <button type="submit" className="px-4 py-2 mt-6 bg-primarybtn  text-white  transition duration-300 ease-in-out rounded-lg">Register</button>
+                <button type="submit" className="px-4 py-2 mt-6 bg-primarybtn  text-white  transition duration-300 ease-in-out rounded-lg font-medium">Register</button>
             </form>
             <div className="flex items-center justify-center mt-5 mb-5 ">
       <hr className="border-t border-gray-300 flex-1 mr-1 line-width" />

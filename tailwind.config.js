@@ -11,7 +11,8 @@ module.exports = {
       colors: {
         primarybtn: '#60A498',
         primarytext: '#60A498',
-        pirmaryColor:  '#60A498'
+        pirmaryColor:  '#60A498',
+        primaryBackground: '#F1FFFD'
         
       },
     },

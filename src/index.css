@@ -29,6 +29,13 @@ code {
   border: 1px solid #60A498;
   border-radius: 8px;
 }
+.small_input
+{
+  width: 224px;
+  background-color: inherit;
+  border: 1px solid #60A498;
+  border-radius: 8px;
+}
 .signin_css {
   border-radius: 8px !important;
 }
@@ -53,4 +60,7 @@ color: #60A498 !important;
 }
 .verification_card {
   background-color: #F1FFFD;
+}
+.custom_option:hover {
+background-color: black !important;
 }

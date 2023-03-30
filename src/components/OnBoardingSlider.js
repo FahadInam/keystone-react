@@ -6,9 +6,9 @@ import onboard3 from '../assets/onboard3.png';
 
 const images = [onboard1, onboard2, onboard3];
 const text = [
-  "Easily schedule shipments and track their progress in real-time. Easily schedule shipments and track their progress in real-time.",
-  "Access a vast network of trusted carriers to find the best rates and services for your needs. Access a vast network of trusted carriers to find the best rates and services for your needs.",
-  "Manage your invoices and payments conveniently through the app. Manage your invoices and payments conveniently through the app."
+  "With a team of experienced professionals and cutting-edge technology,  helping clients to achieve their transportation goals with efficiency.",
+  "Access a vast network of trusted carriers to find the best rates and services for your needs.",
+  "We offers a wide range of services to help businesses streamline their supply chain operations, including freight management, carrier selection, tracking and tracing, and more."
 ];
 
 function OnBoardingSlider() {
@@ -22,7 +22,7 @@ function OnBoardingSlider() {
   }, [currentIndex]);
 
   return (
-    <div className="bg-green-50 h-full flex flex-col justify-center items-center relative">
+    <div className="bg-primaryBackground h-full flex flex-col justify-center items-center relative">
       <div className="w-full h-5/6 flex justify-center items-center">
         {images.map((image, index) => (
           <div
