@@ -5,30 +5,52 @@ import { Link } from 'react-router-dom';
 import { SignUpSchema } from '../Schemas';
 import logo from '../assets/Logo.png';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+
 const initialValues = {
     firstname: "",
     lastname: "",
     email: "",
     password: "",
-    confirm_password: ""
+    password_confirmation: ""
 
 }
 const clientID = "675235851160-vt3qgar1v9b9khtkqtghgmlta4p8gm1o.apps.googleusercontent.com";
 function Signup() { 
+    const [email, setEmail] = useState("");
+
+    const navigate = useNavigate();
 
    const {values, errors ,touched ,handleBlur, handleChange, handleSubmit} = useFormik({
         initialValues: initialValues,
         validationSchema: SignUpSchema,
-        onSubmit : (values) => {
-            console.log(values)
+        onSubmit: async (values) => {
+            const data = {
+              firstname: values.firstname,
+              lastname: values.lastname,
+              email: values.email,
+              password: values.password,
+              password_confirmation: values.password_confirmation,
+            };
+      
+            try {
+              const response = await axios.post('http://192.168.18.43:8000/api/v1/register', data);
+      
+              if (response.status === 201) {
+                console.log("Registration successful");
+                setEmail(data.email);  // Update the email state
+                navigate('/verify');
+              } else {
+                console.log("Registration failed");
+                // Handle registration failure here
+              }
+            } catch (error) {
+              console.log(error);
+              // Handle registration failure here
+            }
         }
     })
-    const onSuccess = (res) => {
-        console.log("here")
-    }
-    const onFailure = (res) => {
-        console.log("here")
-    }
     return (
 <div>
         <div className="flex flex-col items-center justify-center h-screen">
@@ -94,13 +116,13 @@ function Signup() {
                   />
                      { errors.password && touched.password ? <span className='form-error text-red-500' >{errors.password}</span> : null}
 
-                    <label for="confirmpassword" className='text-primarytext mb-2 mt-2'>Confirm Password</label>
+                    <label for="password_confirmation" className='text-primarytext mb-2 mt-2'>Confirm Password</label>
                 <input 
-                 id="confirm_password"
-                name='confirm_password'
+                 id="password_confirmation"
+                name='password_confirmation'
                 type="password"
                  placeholder="Confirm Password" 
-                 value={values.confirm_password}
+                 value={values.password_confirmation}
                  onChange={handleChange}
                  onBlur={handleBlur}
                  className="px-4 py-2 border  border-gray-400 rounded h-12 btn_custom"

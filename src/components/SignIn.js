@@ -4,26 +4,44 @@ import { useFormik } from 'formik';
 import { SignInSchema } from '../Schemas';
 import logo from '../assets/Logo.png';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 const initialValues = {
     email: "",
     password: ""
 }
 const clientID = "675235851160-vt3qgar1v9b9khtkqtghgmlta4p8gm1o.apps.googleusercontent.com";
 function Signin() { 
-
-   const {values, errors ,touched ,handleBlur, handleChange, handleSubmit} = useFormik({
-        initialValues: initialValues,
-        validationSchema: SignInSchema,
-        onSubmit : (values) => {
-            console.log(values)
-        }
-    })
+    const navigate = useNavigate();
     const onSuccess = (res) => {
-        console.log("here")
+        console.log("success")
     }
     const onFailure = (res) => {
-        console.log("here")
+        console.log(res)
     }
+    const {values, errors ,touched ,handleBlur, handleChange, handleSubmit} = useFormik({
+        initialValues: initialValues,
+        validationSchema: SignInSchema,
+        onSubmit: async (values) => {
+            const data = {
+              email: values.email,
+              password: values.password
+            };
+            console.log(data)
+            try {
+                const response = await axios.post('http://192.168.18.43:8000/api/v1/login', data);
+                navigate('/companyonboard');
+              } catch (error) {
+                if (error.response && error.response.status === 403) {
+                  console.log("Account not verified.");
+                  navigate('/verify');
+                } else {
+                  console.log("Error:", error);
+                }
+              }
+           
+        }
+    })
     return (
         
         <div className="flex flex-col items-center justify-center h-screen relative">

@@ -3,7 +3,9 @@ import React from 'react';
 import logo from '../assets/Logo.png';
 import verify from '../assets/verifyemail.png';
 
-function EmailVerification() { 
+function EmailVerification({ userEmail }) { 
+
+    console.log(userEmail)
 return (
 
     <div>
@@ -19,11 +21,11 @@ return (
 </p>
 <div className='flex mt-8'>
 <p className='mr-2'>Need help? Have a question?</p>
-<a to="/signup" className='text-primarytext font-bold'>support team</a>
+<a to="/signup" className='text-primarytext font-bold'>Support team</a>
 </div>
 <div className='flex mt-6'>
 <p className='mr-2'>Didn't receive any email?</p>
-<a to="/signup" className='text-primarytext font-bold'>Resent link</a>
+<a to="/signup" className='text-primarytext font-bold cursor-pointer'>Resend link</a>
 </div>
 </div>
 </div>

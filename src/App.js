@@ -35,10 +35,10 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="*" element={<AppContent />} />
-        <Route path="verify" element={<EmailVerification />} />
-        <Route path="forgotpassword" element={<ForgetPassword />} />
-        <Route path="companyonboard" element={<CompanyInfo />} />
-        <Route path="invite" element={<InviteTeam />} />
+        <Route path="/verify" element={<EmailVerification userEmail={email} />} />
+        <Route path="/forgotpassword" element={<ForgetPassword />} />
+        <Route path="/companyonboard" element={<CompanyInfo />} />
+        <Route path="/invite" element={<InviteTeam />} />
 
       </Routes>
     </BrowserRouter>
