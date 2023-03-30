@@ -4,6 +4,8 @@ import logo from '../assets/Logo.png';
 import verify from '../assets/verifyemail.png';
 import { useContext } from 'react';
 import EmailContext from '../store/Auth';
+import { Link } from 'react-router-dom';
+import axios from 'axios';
 function EmailVerification({ userEmail }) { 
 
     const { email } = useContext(EmailContext);
