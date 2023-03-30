@@ -7,7 +7,8 @@ import logo from '../assets/Logo.png';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-
+import EmailContext from '../store/Auth';
+import { useContext } from 'react';
 const initialValues = {
     firstname: "",
     lastname: "",
@@ -18,9 +19,10 @@ const initialValues = {
 }
 const clientID = "675235851160-vt3qgar1v9b9khtkqtghgmlta4p8gm1o.apps.googleusercontent.com";
 function Signup() { 
-    const [email, setEmail] = useState("");
 
     const navigate = useNavigate();
+    const { setEmail } = useContext(EmailContext);
+
 
    const {values, errors ,touched ,handleBlur, handleChange, handleSubmit} = useFormik({
         initialValues: initialValues,
@@ -39,7 +41,7 @@ function Signup() {
       
               if (response.status === 201) {
                 console.log("Registration successful");
-                setEmail(data.email);  // Update the email state
+                setEmail(values.email);
                 navigate('/verify');
               } else {
                 console.log("Registration failed");

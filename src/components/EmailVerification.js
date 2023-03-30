@@ -2,11 +2,14 @@ import React from 'react';
 
 import logo from '../assets/Logo.png';
 import verify from '../assets/verifyemail.png';
-
+import { useContext } from 'react';
+import EmailContext from '../store/Auth';
 function EmailVerification({ userEmail }) { 
 
-    console.log(userEmail)
-return (
+    const { email } = useContext(EmailContext);
+    
+    console.log('Email in EmailVerification:', email);
+    return (
 
     <div>
 

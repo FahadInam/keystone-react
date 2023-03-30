@@ -7,14 +7,14 @@ import ForgetPassword from './components/ForgetPassword';
 import CompanyInfo from './components/CompanyInfo';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import InviteTeam from './components/InviteTeam';
-
+import EmailContext from './store/Auth';
+import { useState } from 'react';
 function AppContent() {
   const location = useLocation();
 
   // if (location.pathname === '/forgetpassword') {
   //   return <EmailVerification />;
   // }
-
   return (
     <div className='flex'>
       <div className="w-1/2">
@@ -31,16 +31,19 @@ function AppContent() {
 }
 
 function App() {
+  const [email, setEmail] = useState("");
+
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="*" element={<AppContent />} />
-        <Route path="/verify" element={<EmailVerification userEmail={email} />} />
-        <Route path="/forgotpassword" element={<ForgetPassword />} />
-        <Route path="/companyonboard" element={<CompanyInfo />} />
-        <Route path="/invite" element={<InviteTeam />} />
-
-      </Routes>
+      <EmailContext.Provider value={{ email, setEmail }}>
+        <Routes>
+          <Route path="*" element={<AppContent />} />
+          <Route path="/verify" element={<EmailVerification />} />
+          <Route path="/forgotpassword" element={<ForgetPassword />} />
+          <Route path="/companyonboard" element={<CompanyInfo />} />
+          <Route path="/invite" element={<InviteTeam />} />
+        </Routes>
+      </EmailContext.Provider>
     </BrowserRouter>
   );
 }
