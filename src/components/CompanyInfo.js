@@ -5,6 +5,9 @@ import { useFormik } from 'formik';
 import logo from '../assets/Logo.png';
 import companyimage from '../assets/companyonboard.png';
 import { CompanyDetails } from '../Schemas';
+import moment from 'moment-timezone';
+import Select from 'react-select';
+// import 'react-select/dist/react-select.css';
 
 const initialValues = {
     companyname: "",
@@ -18,11 +21,15 @@ const initialValues = {
 
 }
 function CompanyInfo() { 
-
-    const {values, errors ,touched ,handleBlur, handleChange, handleSubmit} = useFormik({
+    const timezones = moment.tz.names().map(name => ({
+        label: `(GMT${moment.tz(name).format('Z')}) ${name}`,
+        value: name,
+      }));
+      
+    const {values, errors ,touched ,handleBlur, handleChange, handleSubmit, setFieldValue } = useFormik({
         initialValues: initialValues,
         validationSchema: CompanyDetails,
-        onSubmit : (values) => {
+        onSubmit : async (values) => {
             console.log(values)
         }
     })
@@ -157,17 +164,16 @@ return (
                   />
                                                      { errors.phonenumber && touched.phonenumber ? <span className='form-error text-red-500' >{errors.phonenumber}</span> : null}
                                                      <label for="timezone" className='text-primarytext mb-2 mt-2'>Time Zone</label>
-                <input 
-                 id="timezone"
-                name='timezone'
-                type="name"
-                 placeholder="Select time zone" 
-                 value={values.timezone}
-                 onChange={handleChange}
-                 onBlur={handleBlur}
-                 className="px-4 py-2 border  border-gray-400 rounded h-12 btn_custom "
+                                                    <Select
+  id="timezone"
+  name="timezone"
+  placeholder="Select a timezone"
+  options={timezones}
+  value={{ label: values.timezone, value: values.timezone }}
+  onChange={selectedOption => setFieldValue('timezone', selectedOption.value)}
+  onBlur={handleBlur}
+/>
 
-                  />
                                                      { errors.timezone && touched.timezone ? <span className='form-error text-red-500' >{errors.timezone}</span> : null}
 
                 <button type="submit" className="font-semibold mt-6 bg-primarybtn  text-white  transition duration-300 ease-in-out rounded-lg self-end px-12 py-3">Save</button>

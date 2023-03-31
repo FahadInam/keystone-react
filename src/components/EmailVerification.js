@@ -3,15 +3,32 @@ import React from 'react';
 import logo from '../assets/Logo.png';
 import verify from '../assets/verifyemail.png';
 import { useContext } from 'react';
-import EmailContext from '../store/Auth';
-import { Link } from 'react-router-dom';
+import EmailContext from '../store/store';
+import { useSelector } from 'react-redux';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 function EmailVerification({ userEmail }) { 
 
-    const { email } = useContext(EmailContext);
-    
+    const email = useSelector((state) => state.email);    
     console.log('Email in EmailVerification:', email);
-    return (
+
+    async function handleResendLink() {
+        try {
+          const response = await axios.post('http://192.168.18.43:8000/api/v1/email/resend', {email});
+      
+          if (response.status === 200) {
+            console.log('Link resend successful');
+            // Handle success here
+          } else {
+            console.log('Link resend failed');
+            // Handle failure here
+          }
+        } catch (error) {
+          console.log('Link resend error:', error);
+          // Handle failure here
+        }
+      }
+        return (
 
     <div>
 
@@ -30,8 +47,12 @@ function EmailVerification({ userEmail }) {
 </div>
 <div className='flex mt-6'>
 <p className='mr-2'>Didn't receive any email?</p>
-<a to="/signup" className='text-primarytext font-bold cursor-pointer'>Resend link</a>
-</div>
+<Link
+  className="text-primarytext font-bold cursor-pointer"
+  onClick={handleResendLink}
+>
+  Resend link
+</Link></div>
 </div>
 </div>
     </div>

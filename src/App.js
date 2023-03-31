@@ -7,8 +7,10 @@ import ForgetPassword from './components/ForgetPassword';
 import CompanyInfo from './components/CompanyInfo';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import InviteTeam from './components/InviteTeam';
-import EmailContext from './store/Auth';
 import { useState } from 'react';
+import { Provider } from 'react-redux';
+import store from './store/store';
+
 function AppContent() {
   const location = useLocation();
 
@@ -34,8 +36,8 @@ function App() {
   const [email, setEmail] = useState("");
 
   return (
+    <Provider store={store}>
     <BrowserRouter>
-      <EmailContext.Provider value={{ email, setEmail }}>
         <Routes>
           <Route path="*" element={<AppContent />} />
           <Route path="/verify" element={<EmailVerification />} />
@@ -43,8 +45,8 @@ function App() {
           <Route path="/companyonboard" element={<CompanyInfo />} />
           <Route path="/invite" element={<InviteTeam />} />
         </Routes>
-      </EmailContext.Provider>
     </BrowserRouter>
+    </Provider>
   );
 }
 

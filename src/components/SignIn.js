@@ -6,6 +6,8 @@ import logo from '../assets/Logo.png';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+
 const initialValues = {
     email: "",
     password: ""
@@ -13,6 +15,8 @@ const initialValues = {
 const clientID = "675235851160-vt3qgar1v9b9khtkqtghgmlta4p8gm1o.apps.googleusercontent.com";
 function Signin() { 
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+
     const onSuccess = (res) => {
         console.log("success")
     }
@@ -34,6 +38,7 @@ function Signin() {
               } catch (error) {
                 if (error.response && error.response.status === 403) {
                   console.log("Account not verified.");
+                  dispatch({ type: 'SET_EMAIL', email: values.email }); // Update the email state
                   navigate('/verify');
                 } else {
                   console.log("Error:", error);

@@ -7,8 +7,7 @@ import logo from '../assets/Logo.png';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import EmailContext from '../store/Auth';
-import { useContext } from 'react';
+import { useDispatch } from 'react-redux';
 const initialValues = {
     firstname: "",
     lastname: "",
@@ -21,8 +20,7 @@ const clientID = "675235851160-vt3qgar1v9b9khtkqtghgmlta4p8gm1o.apps.googleuserc
 function Signup() { 
 
     const navigate = useNavigate();
-    const { setEmail } = useContext(EmailContext);
-
+    const dispatch = useDispatch();
 
    const {values, errors ,touched ,handleBlur, handleChange, handleSubmit} = useFormik({
         initialValues: initialValues,
@@ -41,8 +39,8 @@ function Signup() {
       
               if (response.status === 201) {
                 console.log("Registration successful");
-                setEmail(values.email);
-                navigate('/verify');
+                dispatch({ type: 'SET_EMAIL', email: values.email }); // Update the email state
+                                navigate('/verify');
               } else {
                 console.log("Registration failed");
                 // Handle registration failure here
