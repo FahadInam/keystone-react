@@ -7,6 +7,8 @@ import companyimage from '../assets/companyonboard.png';
 import { CompanyDetails } from '../Schemas';
 import moment from 'moment-timezone';
 import Select from 'react-select';
+import PhoneInput from 'react-phone-input-2';
+import 'react-phone-input-2/lib/style.css';
 // import 'react-select/dist/react-select.css';
 
 const initialValues = {
@@ -17,7 +19,7 @@ const initialValues = {
     zipcode: "",
     state: "",
     phonenumber: "",
-    timezone: ""
+    timezone: "America/New_York"
 
 }
 function CompanyInfo() { 
@@ -25,7 +27,13 @@ function CompanyInfo() {
         label: `(GMT${moment.tz(name).format('Z')}) ${name}`,
         value: name,
       }));
-      
+      const handlePhoneChange = (value) => {
+        handleChange({ target: { name: 'phonenumber', value } });
+      };
+    
+      const handlePhoneBlur = () => {
+        handleBlur({ target: { name: 'phonenumber' } });
+      };
     const {values, errors ,touched ,handleBlur, handleChange, handleSubmit, setFieldValue } = useFormik({
         initialValues: initialValues,
         validationSchema: CompanyDetails,
@@ -151,28 +159,29 @@ return (
                                                      </div>
 </div>
                                                      <label for="phonenumber" className='text-primarytext mb-2 mt-2'>Phone Number</label>
-                <input 
-                 id="phonenumber"
-                name='phonenumber'
-                type="tel"
-                 placeholder="Enter Number" 
-                 value={values.phonenumber}
-                 onChange={handleChange}
-                 onBlur={handleBlur}
-                 className="px-4 py-2 border  border-gray-400 rounded h-12 btn_custom "
-
-                  />
+                                                     <PhoneInput
+      id="phonenumber"
+      name="phonenumber"
+      placeholder="Enter Number"
+      value={values.phonenumber}
+      onChange={handlePhoneChange}
+      onBlur={handlePhoneBlur}
+      enableSearch
+      country="us"
+      inputClass="px-4 py-2 border border-gray-400 rounded h-12 custom_input"
+    />
                                                      { errors.phonenumber && touched.phonenumber ? <span className='form-error text-red-500' >{errors.phonenumber}</span> : null}
                                                      <label for="timezone" className='text-primarytext mb-2 mt-2'>Time Zone</label>
-                                                    <Select
+                                                   <Select
   id="timezone"
   name="timezone"
   placeholder="Select a timezone"
   options={timezones}
-  value={{ label: values.timezone, value: values.timezone }}
-  onChange={selectedOption => setFieldValue('timezone', selectedOption.value)}
+  value={timezones.find((tz) => tz.value === values.timezone)}
+  onChange={(selectedOption) => setFieldValue('timezone', selectedOption.value)}
   onBlur={handleBlur}
 />
+
 
                                                      { errors.timezone && touched.timezone ? <span className='form-error text-red-500' >{errors.timezone}</span> : null}
 
