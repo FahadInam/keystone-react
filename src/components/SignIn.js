@@ -23,6 +23,10 @@ function Signin() {
     const onFailure = (res) => {
         console.log(res)
     }
+    function saveToLocalStorage(id, token) {
+      localStorage.setItem('userId', id);
+      localStorage.setItem('authToken', token);
+    }
     const {values, errors ,touched ,handleBlur, handleChange, handleSubmit} = useFormik({
         initialValues: initialValues,
         validationSchema: SignInSchema,
@@ -34,6 +38,10 @@ function Signin() {
             console.log(data)
             try {
                 const response = await axios.post('http://192.168.18.43:8000/api/v1/login', data);
+                const id = response.data.data.user.id;
+                const token = response.data.data.token;
+                saveToLocalStorage(id, token);
+
                 navigate('/companyonboard');
               } catch (error) {
                 if (error.response && error.response.status === 403) {

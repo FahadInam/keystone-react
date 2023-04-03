@@ -5,12 +5,14 @@ import Signup from './components/SignUp';
 import EmailVerification from './components/EmailVerification';
 import ForgetPassword from './components/ForgetPassword';
 import CompanyInfo from './components/CompanyInfo';
+import EmailSent from './components/EmailSent';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import InviteTeam from './components/InviteTeam';
 import { useState } from 'react';
 import { Provider } from 'react-redux';
 import store from './store/store';
-
+import SetNewPassword from './components/SetNewPassword';
+import PasswordChanged from './components/PasswordChanged'
 function AppContent() {
   const location = useLocation();
 
@@ -44,6 +46,10 @@ function App() {
           <Route path="/forgotpassword" element={<ForgetPassword />} />
           <Route path="/companyonboard" element={<CompanyInfo />} />
           <Route path="/invite" element={<InviteTeam />} />
+          <Route path="/emailsent" element={<EmailSent />} />
+          <Route path="/setpassword" element={<SetNewPassword />} />
+          <Route path="/passwordchanged" element={<PasswordChanged />} />
+
         </Routes>
     </BrowserRouter>
     </Provider>

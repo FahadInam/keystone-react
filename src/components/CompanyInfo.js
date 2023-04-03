@@ -9,6 +9,9 @@ import moment from 'moment-timezone';
 import Select from 'react-select';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+
 // import 'react-select/dist/react-select.css';
 
 const initialValues = {
@@ -23,6 +26,8 @@ const initialValues = {
 
 }
 function CompanyInfo() { 
+  const navigate = useNavigate();
+
     const timezones = moment.tz.names().map(name => ({
         label: `(GMT${moment.tz(name).format('Z')}) ${name}`,
         value: name,
@@ -36,9 +41,39 @@ function CompanyInfo() {
       };
     const {values, errors ,touched ,handleBlur, handleChange, handleSubmit, setFieldValue } = useFormik({
         initialValues: initialValues,
-        validationSchema: CompanyDetails,
-        onSubmit : async (values) => {
-            console.log(values)
+        validationSchema: CompanyDetails,     
+        onSubmit: async (values) => {
+            const data = {
+              companyname: values.companyname,
+              address: values.address,
+              country: values.country,
+              city: values.city,
+              zipcode: values.zipcode,
+              state: values.state,
+              phonenumber: values.phonenumber,
+              timezone: values.timezone
+            };
+            console.log(data)
+            const userId = localStorage.getItem('userId');
+            console.log(userId)
+            const authToken = localStorage.getItem('authToken');
+            console.log(userId, authToken)
+            try {
+                const response = await axios.post(`http://192.168.18.43:8000/api/v1/users/${userId}/companies`,
+                {},
+                {
+                  headers: {
+                    'Authorization': `Bearer ${authToken}`,
+                    'Accept': 'application/json'
+                  },
+                }
+                );
+                navigate('/invite');
+
+              } catch (error) {
+                console.error('Error:', error);
+              }
+           
         }
     })
 return (
