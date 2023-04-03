@@ -6,8 +6,9 @@ import { SignUpSchema } from '../Schemas';
 import logo from '../assets/Logo.png';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
+import jwt_decode from "jwt-decode"
 const initialValues = {
     firstname: "",
     lastname: "",
@@ -16,11 +17,45 @@ const initialValues = {
     password_confirmation: ""
 
 }
-const clientID = "675235851160-vt3qgar1v9b9khtkqtghgmlta4p8gm1o.apps.googleusercontent.com";
+
+
+  
 function Signup() { 
 
+  useEffect(() => {
+    window.google.accounts.id.initialize({
+      client_id: "675235851160-66cn8tgpnshencddslna5s54a5tnval5.apps.googleusercontent.com",
+      callback: handleCredentialResponse,
+    });
+    window.google.accounts.id.renderButton(
+      document.getElementById("signInDiv"), 
+      {
+      theme: "outline",
+      size: "large",
+      width: "long",
+    });
+
+  }, []);
+
+  const handleCredentialResponse = (response) => {
+    console.log("Credential Response:", response);
+    var userdata = jwt_decode(response.credential)
+    console.log(userdata)
+    // Handle the Google Sign-In response (e.g., send the response to your API for authentication)
+  };
     const navigate = useNavigate();
     const dispatch = useDispatch();
+
+
+    
+const onSuccess = (response) => {
+  console.log("Login Success:", response.profileObj);
+  // Store user information and access token in your app state or a context provider
+};
+
+const onFailure = (response) => {
+  console.log("Login Failure:", response);
+};
 
    const {values, errors ,touched ,handleBlur, handleChange, handleSubmit} = useFormik({
         initialValues: initialValues,
@@ -137,13 +172,16 @@ function Signup() {
       <span className="text-gray-500 font-medium mx-1">OR</span>
       <hr className="border-t border-gray-300 flex-1 ml-1 line-width" />
     </div>
-    <GoogleLogin 
+    {/* <GoogleLogin 
   clientId={clientID}
   buttonText="Continue with Google"
   cookiePolicy={'single_host_origin'}
   isSignedIn={true}
+  onSuccess={onSuccess}
+  onFailure={onFailure}
   className="w-full justify-center google_btn "
-/>
+/> */}
+<div id='signInDiv'></div>
 <div className='flex mt-8'>
 <p className='mr-2'>Already have an account?</p>
 <Link to="/" className='text-primarytext font-bold'>Sign In</Link>

@@ -12,7 +12,7 @@ const initialValues = {
     email: "",
     password: ""
 }
-const clientID = "675235851160-vt3qgar1v9b9khtkqtghgmlta4p8gm1o.apps.googleusercontent.com";
+// const clientID = "675235851160-0k73mjp56b95cfqtql3hea3r8bss4046.apps.googleusercontent.com";
 function Signin() { 
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -100,7 +100,7 @@ function Signin() {
       <span className="text-gray-500 font-medium mx-1">OR</span>
       <hr className="border-t border-gray-300 flex-1 ml-1 line-width" />
     </div>
-    <GoogleLogin 
+    {/* <GoogleLogin 
   clientId={clientID}
   buttonText="Continue with Google"
   onSuccess={onSuccess}
@@ -108,7 +108,7 @@ function Signin() {
   cookiePolicy={'single_host_origin'}
   isSignedIn={true}
   className="w-full justify-center google_btn "
-/>
+/> */}
 <div className='flex mt-8'>
 <p className='mr-2'>Don’t have an account?</p>
 <Link to="/signup" className='text-primarytext font-bold'>Sign up</Link>
