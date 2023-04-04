@@ -7,6 +7,8 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
+import jwt_decode from "jwt-decode"
+import { useState, useEffect } from 'react';
 
 const initialValues = {
     email: "",
@@ -17,12 +19,40 @@ function Signin() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
-    const onSuccess = (res) => {
-        console.log("success")
-    }
-    const onFailure = (res) => {
-        console.log(res)
-    }
+    useEffect(() => {
+      window.google.accounts.id.initialize({
+        client_id: "675235851160-66cn8tgpnshencddslna5s54a5tnval5.apps.googleusercontent.com",
+        callback: handleCredentialResponse,
+      });
+      window.google.accounts.id.renderButton(
+        document.getElementById("signInDiv"), 
+        {
+        theme: "outline",
+        size: "large",
+        width: "500",
+      });
+  
+    }, []);
+  
+    const handleCredentialResponse = (response) => {
+      console.log("Credential Response:", response);
+      var userdata = jwt_decode(response.credential)
+      console.log(userdata)
+      const googleId = userdata.sub;
+      const firstName = userdata.given_name;
+      const lastName = userdata.family_name;
+      const email = userdata.email;
+      const data = {
+        firstname: firstName,
+        lastname: lastName,
+        email: email,
+        google_id : googleId
+      }
+       console.log ("here")
+    
+      // Handle the Google Sign-In response (e.g., send the response to your API for authentication)
+      saveUserData(data);
+    };
     function saveToLocalStorage(id, token) {
       localStorage.setItem('userId', id);
       localStorage.setItem('authToken', token);
@@ -36,25 +66,29 @@ function Signin() {
               password: values.password
             };
             console.log(data)
-            try {
-                const response = await axios.post('http://192.168.18.43:8000/api/v1/login', data);
-                const id = response.data.data.user.id;
-                const token = response.data.data.token;
-                saveToLocalStorage(id, token);
+          
+              saveUserData(data);
 
-                navigate('/companyonboard');
-              } catch (error) {
-                if (error.response && error.response.status === 403) {
-                  console.log("Account not verified.");
-                  dispatch({ type: 'SET_EMAIL', email: values.email }); // Update the email state
-                  navigate('/verify');
-                } else {
-                  console.log("Error:", error);
-                }
-              }
-           
         }
     })
+    const saveUserData = async (data) => {
+      try {
+        const response = await axios.post('http://192.168.18.43:8000/api/v1/login', data);
+        const id = response.data.data.user.id;
+        const token = response.data.data.token;
+        saveToLocalStorage(id, token);
+
+        navigate('/companyonboard');
+      } catch (error) {
+        if (error.response && error.response.status === 403) {
+          console.log("Account not verified.");
+          dispatch({ type: 'SET_EMAIL', email: values.email }); // Update the email state
+          navigate('/verify');
+        } else {
+          console.log("Error:", error);
+        }
+      }
+    }
     return (
         
         <div className="flex flex-col items-center justify-center h-screen relative">
@@ -72,7 +106,7 @@ function Signin() {
                 type="email" 
                 placeholder="Email"
 
-                 className="px-4 py-2 border border-gray-400 rounded h-12  btn_custom"
+                 className="px-4 py-2  border-gray-400 rounded h-12  btn_custom focus:ring-transparent"
                 value={values.email }
                 onChange={handleChange}
                 onBlur={handleBlur}
@@ -85,7 +119,7 @@ function Signin() {
                 type="password"
                  placeholder="Password" 
 
-                 className="px-4 py-2 border  border-gray-400 rounded h-12 btn_custom"
+                 className="px-4 py-2 border  border-gray-400 rounded h-12 btn_custom focus:ring-transparent"
 
                  value={values.password }
                 onChange={handleChange}
@@ -109,6 +143,8 @@ function Signin() {
   isSignedIn={true}
   className="w-full justify-center google_btn "
 /> */}
+<div id='signInDiv'></div>
+
 <div className='flex mt-8'>
 <p className='mr-2'>Don’t have an account?</p>
 <Link to="/signup" className='text-primarytext font-bold'>Sign up</Link>

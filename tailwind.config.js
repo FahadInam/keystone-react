@@ -12,7 +12,8 @@ module.exports = {
         primarybtn: '#60A498',
         primarytext: '#60A498',
         pirmaryColor:  '#60A498',
-        primaryBackground: '#F1FFFD'
+        primaryBackground: '#F1FFFD',
+        hoverPrimary: '#DCFCE7'
         
       },
     },

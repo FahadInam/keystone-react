@@ -88,7 +88,7 @@ return (
             <h2 className="text-4xl font-bold mb-4 ">Company Information</h2>
             <p className='mb-8 leading-4'>Add the company information</p>
             <form  onSubmit={handleSubmit} className="flex flex-col">
-                <label for="dotnumber" className='text-primarytext mb-2'>DOT Number<span className='ml-1 text-gray'>(Optional)</span></label>
+                <label for="dotnumber" className='text-primarytext mb-2'>DOT Number<span className='ml-1 text-gray-400 text-sm'>(Optional)</span></label>
 
                 <input 
                 id="dotnumber"
@@ -97,7 +97,7 @@ return (
                 // value={values.firstname}
                 // onChange={handleChange}
                 // onBlur={handleBlur}
-                 className="px-4 py-2 border border-gray-400 rounded h-12  btn_custom"
+                 className="px-4 py-2 border border-gray-400 rounded h-12  btn_custom focus:ring-transparent"
                   />
                  {/* { errors.firstname && touched.firstname ? <span className='form-error text-red-500' >{errors.firstname}</span> : null} */}
 
@@ -110,7 +110,7 @@ return (
                  value={values.companyname}
                  onChange={handleChange}
                  onBlur={handleBlur}
-                 className="px-4 py-2 border  border-gray-400 rounded h-12 btn_custom"
+                 className="px-4 py-2 border  border-gray-400 rounded h-12 btn_custom focus:ring-transparent"
 
                   />
                                                      { errors.companyname && touched.companyname ? <span className='form-error text-red-500' >{errors.companyname}</span> : null}
@@ -124,7 +124,7 @@ return (
                  value={values.address}
                  onChange={handleChange}
                  onBlur={handleBlur}
-                 className="px-4 py-2 border  border-gray-400 rounded h-12 btn_custom"
+                 className="px-4 py-2 border  border-gray-400 rounded h-12 btn_custom focus:ring-transparent"
 
                   />
                           { errors.address && touched.address ? <span className='form-error text-red-500' >{errors.address}</span> : null}
@@ -139,7 +139,7 @@ return (
                  value={values.country}
                  onChange={handleChange}
                  onBlur={handleBlur}
-                 className="px-4 py-2 border  border-gray-400 rounded h-12 small_input mr-6"
+                 className="px-4 py-2 border  border-gray-400 rounded h-12 small_input mr-6 focus:ring-transparent"
 
                   />              
                          { errors.country && touched.country ? <span className='form-error text-red-500' >{errors.country}</span> : null}
@@ -154,7 +154,7 @@ return (
                  value={values.city}
                  onChange={handleChange}
                  onBlur={handleBlur}
-                 className="px-4 py-2 border  border-gray-400 rounded h-12 small_input"
+                 className="px-4 py-2 border  border-gray-400 rounded h-12 small_input focus:ring-transparent"
 
                   />
                    { errors.city && touched.city ? <span className='form-error text-red-500' >{errors.city}</span> : null}
@@ -171,7 +171,7 @@ return (
                  value={values.zipcode}
                  onChange={handleChange}
                  onBlur={handleBlur}
-                 className="px-4 py-2 border  border-gray-400 rounded h-12 small_input mr-6"
+                 className="px-4 py-2 border  border-gray-400 rounded h-12 small_input mr-6 focus:ring-transparent"
 
                   />
                      { errors.zipcode && touched.zipcode ? <span className='form-error text-red-500' >{errors.zipcode}</span> : null}
@@ -187,7 +187,7 @@ return (
                  value={values.state}
                  onChange={handleChange}
                  onBlur={handleBlur}
-                 className="px-4 py-2 border  border-gray-400 rounded h-12 small_input"
+                 className="px-4 py-2 border  border-gray-400 rounded h-12 small_input focus:ring-transparent"
 
                   />
                                                      { errors.state && touched.state ? <span className='form-error text-red-500' >{errors.state}</span> : null}
@@ -203,7 +203,7 @@ return (
       onBlur={handlePhoneBlur}
       enableSearch
       country="us"
-      inputClass="px-4 py-2 border border-gray-400 rounded h-12 custom_input"
+      inputClass="px-4 py-2 border border-gray-400 rounded h-12 custom_input focus:ring-transparent"
     />
                                                      { errors.phonenumber && touched.phonenumber ? <span className='form-error text-red-500' >{errors.phonenumber}</span> : null}
                                                      <label for="timezone" className='text-primarytext mb-2 mt-2'>Time Zone</label>
@@ -215,6 +215,7 @@ return (
   value={timezones.find((tz) => tz.value === values.timezone)}
   onChange={(selectedOption) => setFieldValue('timezone', selectedOption.value)}
   onBlur={handleBlur}
+  className='focus:ring-transparent'
 />
 
 

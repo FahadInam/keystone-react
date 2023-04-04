@@ -1,11 +1,48 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-
 import logo from '../assets/Logo.png';
 import companyimage from '../assets/teamimage.png';
+import { useFormik } from 'formik';
+import CustomDropdown from "./CustomDropdownWithFormik";
+import { InviteValidation } from '../Schemas';
 
+const options = ["User", "Admin"]; 
 
+const initialValues = {
+  firstname: "",
+  lastname: "",
+  email: "",
+  userType: "Select an option"
+}
 function InviteTeam() { 
+  const { values, errors, touched,  handleBlur,   handleChange,  handleSubmit, setFieldValue, setFieldTouched } = useFormik({
+    initialValues: initialValues,
+    validationSchema: InviteValidation,
+    onSubmit: async (values) => {
+      const data = {
+        firstname: values.firstname,
+        lastname: values.lastname,
+        email: values.email,
+        userType: values.userType, // Add userType to data object
+      };
+    },
+  });
+
+  // CustomDropdown component with userType value update
+  const CustomDropdownWithFormik = (props) => {
+    const onOptionClick  = (option) => {
+      if (option === "Select an option") {
+        setFieldValue("userType", "");
+      } else {
+        setFieldValue("userType", option);
+              setFieldTouched("userType", true);
+
+      }
+    };
+
+    return <CustomDropdown {...props} onOptionClick={onOptionClick} />;
+};
+
 return (
     <div className='flex'>
 
@@ -17,71 +54,65 @@ return (
 <div className='flex flex-col items-center bg-primaryBackground p-8 signin_css shadow-onboardingShadow'>
             <h2 className="text-4xl font-bold mb-4 ">Invite Team Member</h2>
             <p className='mb-8 leading-4'>Invite your team members</p>
-            <form  className="flex flex-col">
+            <form  onSubmit={handleSubmit} className="flex flex-col">
                
                     <div className='flex'>
                         <div className='flex flex-col'>
-                  <label for="password" className='text-primarytext mb-2 mt-2'>First Name</label>
+                  <label for="firstname" className='text-primarytext mb-2 mt-2'>First Name</label>
                 <input 
-                 id="password"
-                name='password'
+                 id="firstname"
+                name='firstname'
                 type="name"
                  placeholder="Enter First name" 
-                //  value={values.password}
-                //  onChange={handleChange}
-                //  onBlur={handleBlur}
-                 className="px-4 py-2 border  border-gray-400 rounded h-12 small_input mr-6"
+                 value={values.firstname}
+                 onChange={handleChange}
+                 onBlur={handleBlur}
+                 className="px-4 py-2 border  border-gray-400 rounded h-12 small_input mr-6 focus:ring-transparent"
 
-                  />                     {/* { errors.password && touched.password ? <span className='form-error text-red-500' >{errors.password}</span> : null} */}
+                  />      { errors.firstname && touched.firstname ? <span className='form-error text-red-500' >{errors.firstname}</span> : null} 
 </div>  
 <div className='flex flex-col'>
-                   <label for="password" className='text-primarytext mb-2 mt-2'>Last Name</label>
+                   <label for="lastname" className='text-primarytext mb-2 mt-2'>Last Name</label>
                 <input 
-                 id="password"
-                name='password'
+                 id="lastname"
+                name='lastname'
                 type="name"
                  placeholder="Enter Last name" 
-                //  value={values.password}
-                //  onChange={handleChange}
-                //  onBlur={handleBlur}
-                 className="px-4 py-2 border  border-gray-400 rounded h-12 small_input"
+                 value={values.lastname}
+                 onChange={handleChange}
+                 onBlur={handleBlur}
+                 className="px-4 py-2 border  border-gray-400 rounded h-12 small_input focus:ring-transparent"
 
                   />
-                   {/* { errors.password && touched.password ? <span className='form-error text-red-500' >{errors.password}</span> : null} */}
+                  { errors.lastname && touched.lastname ? <span className='form-error text-red-500' >{errors.lastname}</span> : null}
                   </div>
                   </div>
                 
-                                                     <label for="confirmpassword" className='text-primarytext mb-2 mt-4'>Email ID</label>
+                                                     <label for="email" className='text-primarytext mb-2 mt-4'>Email ID</label>
                 <input 
-                 id="confirm_password"
-                name='confirm_password'
+                 id="email"
+                name='email'
                 type="email"
                  placeholder="Enter Email ID" 
-                //  value={values.confirm_password}
-                //  onChange={handleChange}
-                //  onBlur={handleBlur}
-                 className="px-4 py-2 border  border-gray-400 rounded h-12 btn_custom "
+                 value={values.email}
+                 onChange={handleChange}
+                 onBlur={handleBlur}
+                 className="px-4 py-2 border  border-gray-400 rounded h-12 btn_custom focus:ring-transparent "
 
                   />
-                                                     {/* { errors.confirm_password && touched.confirm_password ? <span className='form-error text-red-500' >{errors.confirm_password}</span> : null} */}
+                         { errors.email && touched.email ? <span className='form-error text-red-500' >{errors.email}</span> : null} 
                          <div className='mt-8'>
                             <p className='text-gray-500 mb-3 font-medium'>Assign Permission to Member</p>
                                                      <hr className="border-t border-gray-300   " />
                             </div>
                             <label className="block font-bold mb-2 text-primarybtn mt-6" htmlFor="select">
-                            Select Permissions
+                            Team Member Role
       </label>
-                            <select
-      className="block w-full p-2 border border-gray-300 rounded shadow-sm h-12 appearance-none bg-inherit focus:outline-none focus:ring focus:ring-blue-500 focus:border-blue-500"
-    >
-<option value="" disabled selected hidden className="text-gray-400">
-          Select an option
-        </option>    
-          <option value="option1" className="custom_option">Option 1</option>
-      <option value="option2" className="custom_option">Option 2</option>
-      <option value="option3" className="custom_option">Option 3</option>
-    </select>
-
+                          
+      <CustomDropdownWithFormik options={options} />
+{errors.userType && touched.userType ? (
+  <span className="form-error text-red-500">{errors.userType}</span>
+) : null}
                 <div className='flex justify-end'>
                 <button type="submit" className="font-semibold mt-6 border border-solid bg-green-50 text-primarybtn border-gray-400  transition duration-300 ease-in-out rounded-lg  px-12 py-3 ">Skip</button>
 

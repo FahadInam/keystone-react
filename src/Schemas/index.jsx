@@ -32,3 +32,16 @@ export const CompanyDetails = Yup.object({
 export const ForgotPassword = Yup.object({
     email: Yup.string().email("Must be a valid email.").required("Please enter your email.")
 })
+export const ResetPassword = Yup.object({
+    password: Yup.string().min(6).required("Please enter your password."),
+    password_confirmation: Yup.string().required('').oneOf([Yup.ref('password'), null], "Password must match")
+
+})
+export const InviteValidation = Yup.object({
+    firstname: Yup.string().min(2).max(25).required("Enter a valid firsname."),
+    lastname: Yup.string().min(2).max(25).required("Enter a valid lastname."),
+    email: Yup.string().email().required("Enter an email."),
+    userType: Yup.string()
+    .notOneOf(["Select an option"], "Please select a user role")
+    .required("Required"),
+})

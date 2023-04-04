@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useFormik } from 'formik';
-import { ForgotPassword } from '../Schemas';
+import { ResetPassword } from '../Schemas';
 import logo from '../assets/Logo.png';
 import keyicon from '../assets/Keyicon.png';
 
@@ -10,23 +10,29 @@ import { useNavigate } from 'react-router-dom';
 import arrowleft from '../assets/ArrowLeft.png';
 
 const initialValues = {
-    email: ""
+    password: "",
+    password_confirmation: ""
 }
 function SetNewPassword() { 
     const navigate = useNavigate();
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get('token');
+    const email = urlParams.get('email');
 
     const {values, errors ,touched ,handleBlur, handleChange, handleSubmit} = useFormik({
         initialValues: initialValues,
-        validationSchema: ForgotPassword,
+        validationSchema: ResetPassword,
         onSubmit: async (values) => {
             const data = {
-              email: values.email,
+                email: email,
+              password: values.password,
+              password_confirmation: values.password_confirmation
             };
             console.log(data)
             try {
-                const response = await axios.post('http://192.168.18.43:8000/api/v1/forgot-password', data);
+                const response = await axios.post(`http://192.168.18.43:8000/api/v1/password/reset/${token}`, data);
+                navigate('/passwordchanged');
 
-                navigate('/emailsent');
               } catch (error) {
                 console.log(error)
               }
@@ -53,27 +59,27 @@ return (
 id="password"
 name='password'
 type="password" 
-value={values.email }
+value={values.password }
                 onChange={handleChange}
                 onBlur={handleBlur}
 placeholder="New password"
- className="px-4 py-2 border border-gray-400 rounded h-12  btn_custom"
+ className="px-4 py-2 border border-gray-400 rounded h-12  btn_custom focus:ring-transparent"
 />
-{ errors.email && touched.email ? <span className='text-red-500'>{errors.email}</span> : null}
+{ errors.password && touched.password ? <span className='text-red-500'>{errors.password}</span> : null}
 
-<label for="confirm_password" className='text-primarytext mb-2 mt-6'>Confirm Password</label>
+<label for="password_confirmation" className='text-primarytext mb-2 mt-6'>Confirm Password</label>
 
 <input 
-id="confirm_password"
-name='confirm_password'
-type="paswword" 
-value={values.email }
+id="password_confirmation"
+name='password_confirmation'
+type="password" 
+value={values.password_confirmation }
                 onChange={handleChange}
                 onBlur={handleBlur}
 placeholder="Confirm new password"
- className="px-4 py-2 border border-gray-400 rounded h-12  btn_custom"
+ className="px-4 py-2 border border-gray-400 rounded h-12  btn_custom focus:ring-transparent"
 />
-{ errors.email && touched.email ? <span className='text-red-500'>{errors.email}</span> : null}
+{ errors.password_confirmation && touched.password_confirmation ? <span className='text-red-500'>{errors.password_confirmation}</span> : null}
 
 <button type="submit" className="px-4 py-2 mt-6 bg-primarybtn  text-white  transition duration-300 ease-in-out rounded-lg font-bold">Save</button>
 </form>

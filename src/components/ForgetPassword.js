@@ -56,7 +56,7 @@ value={values.email }
                 onChange={handleChange}
                 onBlur={handleBlur}
 placeholder="Email"
- className="px-4 py-2 border border-gray-400 rounded h-12  btn_custom"
+ className="px-4 py-2 border border-gray-400 rounded h-12  btn_custom focus:ring-transparent"
 />
 { errors.email && touched.email ? <span className='text-red-500'>{errors.email}</span> : null}
 

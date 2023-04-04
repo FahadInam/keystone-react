@@ -32,7 +32,7 @@ function Signup() {
       {
       theme: "outline",
       size: "large",
-      width: "long",
+      width: "500",
     });
 
   }, []);
@@ -41,21 +41,23 @@ function Signup() {
     console.log("Credential Response:", response);
     var userdata = jwt_decode(response.credential)
     console.log(userdata)
+    const googleId = userdata.sub;
+    const firstName = userdata.given_name;
+    const lastName = userdata.family_name;
+    const email = userdata.email;
+    const data = {
+      firstname: firstName,
+      lastname: lastName,
+      email: email,
+      google_id : googleId
+    }
+     console.log ("here")
+  
     // Handle the Google Sign-In response (e.g., send the response to your API for authentication)
+    saveUserData(data);
   };
     const navigate = useNavigate();
     const dispatch = useDispatch();
-
-
-    
-const onSuccess = (response) => {
-  console.log("Login Success:", response.profileObj);
-  // Store user information and access token in your app state or a context provider
-};
-
-const onFailure = (response) => {
-  console.log("Login Failure:", response);
-};
 
    const {values, errors ,touched ,handleBlur, handleChange, handleSubmit} = useFormik({
         initialValues: initialValues,
@@ -69,23 +71,28 @@ const onFailure = (response) => {
               password_confirmation: values.password_confirmation,
             };
       
-            try {
-              const response = await axios.post('http://192.168.18.43:8000/api/v1/register', data);
-      
-              if (response.status === 201) {
-                console.log("Registration successful");
-                dispatch({ type: 'SET_EMAIL', email: values.email }); // Update the email state
-                                navigate('/verify');
-              } else {
-                console.log("Registration failed");
-                // Handle registration failure here
-              }
-            } catch (error) {
-              console.log(error);
-              // Handle registration failure here
-            }
+            saveUserData(data);
+
         }
     })
+      const saveUserData = async (data) => {
+        try {
+          const response = await axios.post('http://192.168.18.43:8000/api/v1/register', data);
+  
+          if (response.status === 200) {
+            console.log("Registration successful");
+            console.log( data.email)
+            dispatch({ type: 'SET_EMAIL', email: data.email }); // Update the email state
+                            navigate('/verify');
+          } else {
+            console.log("Registration failed");
+            // Handle registration failure here
+          }
+        } catch (error) {
+          console.log(error);
+          // Handle registration failure here
+        }
+      }
     return (
 <div>
         <div className="flex flex-col items-center justify-center h-screen">
@@ -105,7 +112,7 @@ const onFailure = (response) => {
                 value={values.firstname}
                 onChange={handleChange}
                 onBlur={handleBlur}
-                 className="px-4 py-2 border border-gray-400 rounded h-12  btn_custom"
+                 className="px-4 py-2 border border-gray-400 rounded h-12  btn_custom focus:ring-transparent"
                   />
                                    { errors.firstname && touched.firstname ? <span className='form-error text-red-500' >{errors.firstname}</span> : null}
 
@@ -118,7 +125,7 @@ const onFailure = (response) => {
                  value={values.lastname}
                  onChange={handleChange}
                  onBlur={handleBlur}
-                 className="px-4 py-2 border  border-gray-400 rounded h-12 btn_custom"
+                 className="px-4 py-2 border  border-gray-400 rounded h-12 btn_custom focus:ring-transparent"
 
                   />
                                                      { errors.lastname && touched.lastname ? <span className='form-error text-red-500' >{errors.lastname}</span> : null}
@@ -132,7 +139,7 @@ const onFailure = (response) => {
                  value={values.email}
                  onChange={handleChange}
                  onBlur={handleBlur}
-                 className="px-4 py-2 border  border-gray-400 rounded h-12 btn_custom"
+                 className="px-4 py-2 border  border-gray-400 rounded h-12 btn_custom focus:ring-transparent"
 
                   />
                                                      { errors.email && touched.email ? <span className='form-error text-red-500' >{errors.email}</span> : null}
@@ -146,7 +153,7 @@ const onFailure = (response) => {
                  value={values.password}
                  onChange={handleChange}
                  onBlur={handleBlur}
-                 className="px-4 py-2 border  border-gray-400 rounded h-12 btn_custom"
+                 className="px-4 py-2 border  border-gray-400 rounded h-12 btn_custom focus:ring-transparent"
 
                   />
                      { errors.password && touched.password ? <span className='form-error text-red-500' >{errors.password}</span> : null}
@@ -160,7 +167,7 @@ const onFailure = (response) => {
                  value={values.password_confirmation}
                  onChange={handleChange}
                  onBlur={handleBlur}
-                 className="px-4 py-2 border  border-gray-400 rounded h-12 btn_custom"
+                 className="px-4 py-2 border  border-gray-400 rounded h-12 btn_custom focus:ring-transparent"
 
                   />
                                                      { errors.confirm_password && touched.confirm_password ? <span className='form-error text-red-500' >{errors.confirm_password}</span> : null}
