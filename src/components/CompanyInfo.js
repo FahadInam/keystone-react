@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import { useFormik } from 'formik';
 
 import logo from '../assets/Logo.png';
+import searchicon from '../assets/searchicon.png';
+
 import companyimage from '../assets/companyonboard.png';
 import { CompanyDetails } from '../Schemas';
 import moment from 'moment-timezone';
@@ -11,10 +13,26 @@ import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 
 // import 'react-select/dist/react-select.css';
 
-const initialValues = {
+
+
+// const initialValues = {
+//     companyname: "",
+//     address: "",
+//     country: "",
+//     city: "",
+//     zipcode: "",
+//     state: "",
+//     phonenumber: "",
+//     timezone: "America/New_York"
+
+// }
+function CompanyInfo() { 
+  
+  const [initialValues, setinitialValues] = useState({
     companyname: "",
     address: "",
     country: "",
@@ -23,10 +41,22 @@ const initialValues = {
     state: "",
     phonenumber: "",
     timezone: "America/New_York"
-
-}
-function CompanyInfo() { 
+  })
   const navigate = useNavigate();
+  // const [legalName, setLegalName] = useState('');
+  // const [phyCountry, setPhyCountry] = useState('');
+  // const [phyCity, setPhyCity] = useState('');
+  // const [phyZipcode, setPhyZipcode] = useState('');
+  // const [phyState, setPhyState] = useState('');
+
+  // const [companyData, setComapnayData]=useState({
+  //   legalName:'',
+  //   phyCountry: '',
+  //   phyCity: '',
+  //   phyZipcode: '',
+  //   phyState: ''
+  // })
+  console.log(initialValues)
 
     const timezones = moment.tz.names().map(name => ({
         label: `(GMT${moment.tz(name).format('Z')}) ${name}`,
@@ -39,7 +69,44 @@ function CompanyInfo() {
       const handlePhoneBlur = () => {
         handleBlur({ target: { name: 'phonenumber' } });
       };
-    const {values, errors ,touched ,handleBlur, handleChange, handleSubmit, setFieldValue } = useFormik({
+      const SearchDotNumber = async () => {
+        const dotnumber = document.getElementById('dotnumber').value;
+
+          // Validate the DOT number
+  try {
+    await CompanyDetails.validateAt('dotnumber', { dotnumber });
+  } catch (error) {
+    console.error('Validation error:', error.message);
+    return;
+  }
+        try {
+          const response = await axios.get(`https://mobile.fmcsa.dot.gov/qc/services/carriers/${dotnumber}?webKey=6c771d2c3eb9245cfe8775fc0a17c1792a4cbb59&format=json`);
+          // console.log(response.data.content.carrier.legalName,response.data.content.carrier.phyCountry, response.data.content.carrier.phyCity, response.data.content.carrier.phyZipcode
+          //   , response.data.content.carrier.phyState  );
+          // navigate('/invite');-
+          const { legalName, phyCountry, phyCity, phyZipcode, phyState, phyStreet } = response.data.content.carrier;
+          console.log(legalName)
+          
+          resetForm({
+            values: {
+              ...initialValues,
+              companyname: legalName,
+              address: phyStreet,
+              country: phyCountry,
+              city: phyCity,
+              zipcode: phyZipcode,
+              state: phyState,
+
+            },
+          });
+
+         console.log(initialValues)
+
+        } catch (error) {
+          console.error('Error:', error);
+        }
+      }
+    const {values, errors ,touched ,handleBlur, handleChange, handleSubmit, setFieldValue, resetForm} = useFormik({
         initialValues: initialValues,
         validationSchema: CompanyDetails,     
         onSubmit: async (values) => {
@@ -89,17 +156,21 @@ return (
             <p className='mb-8 leading-4'>Add the company information</p>
             <form  onSubmit={handleSubmit} className="flex flex-col">
                 <label for="dotnumber" className='text-primarytext mb-2'>DOT Number<span className='ml-1 text-gray-400 text-sm'>(Optional)</span></label>
-
+            <div className='relative'>
                 <input 
                 id="dotnumber"
                 name='dotnumber'
                 type="name" 
-                // value={values.firstname}
-                // onChange={handleChange}
-                // onBlur={handleBlur}
+                value={values.dotnumber}
+                onChange={handleChange}
+                onBlur={handleBlur}
                  className="px-4 py-2 border border-gray-400 rounded h-12  btn_custom focus:ring-transparent"
                   />
-                 {/* { errors.firstname && touched.firstname ? <span className='form-error text-red-500' >{errors.firstname}</span> : null} */}
+                  <img src={searchicon} className='absolute top-2 right-3 cursor-pointer' onClick={SearchDotNumber} />
+                  </div>
+                 { errors.dotnumber && touched.dotnumber ? <span className='form-error text-red-500' >{errors.dotnumber}</span> : null}
+
+                 
 
                                     <label for="companyname" className='text-primarytext mb-2 mt-2'>Company</label>
                 <input 
