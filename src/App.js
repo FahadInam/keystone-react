@@ -13,6 +13,7 @@ import { Provider } from 'react-redux';
 import store from './store/store';
 import SetNewPassword from './components/SetNewPassword';
 import PasswordChanged from './components/PasswordChanged'
+import Dashboard from './components/Dashboard';
 function AppContent() {
   const location = useLocation();
 
@@ -49,6 +50,7 @@ function App() {
           <Route path="/emailsent" element={<EmailSent />} />
           <Route path="/setpassword" element={<SetNewPassword />} />
           <Route path="/passwordchanged" element={<PasswordChanged />} />
+          <Route path="/dashboard" element={<Dashboard />} />
 
         </Routes>
     </BrowserRouter>

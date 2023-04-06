@@ -13,8 +13,8 @@ module.exports = {
         primarytext: '#60A498',
         pirmaryColor:  '#60A498',
         primaryBackground: '#F1FFFD',
-        hoverPrimary: '#DCFCE7'
-        
+        hoverPrimary: '#DCFCE7',
+        NavBarText: '#4B5563'
       },
     },
   },

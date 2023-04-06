@@ -159,3 +159,28 @@ border-radius: 8px;
 }
 
 
+/* Navbar */
+.navbar_css {
+  width: 332px;
+
+}
+.main-body_css {
+  width: calc(100% - 332px);
+}
+
+.nav-opt:hover {
+  background: linear-gradient(269.46deg, rgba(23, 207, 152, 0.4) -157.04%, rgba(255, 255, 255, 0) 176.19%);
+  border-radius: 8px;
+}
+.nav-opt > img:hover {
+  fill: #17CF98 !important;
+}
+
+/* Main body */
+.nav-top_css {
+  height: 64px;
+}
+.main-content_css {
+  height: calc(100% - 64px);
+
+}
