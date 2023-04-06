@@ -14,7 +14,7 @@ function Navtop() {
 
 <div className='flex self-center'>
 
-                <div className='self-center rounded-3xl bg-red-500 w-8 h-8 '>
+                <div className='self-center  user_css w-9 h-9 mr-5 '>
                   <span >FD</span>
                 </div>
                 <div className='mr-5'>

@@ -184,3 +184,7 @@ border-radius: 8px;
   height: calc(100% - 64px);
 
 }
+.user_css {
+  background: linear-gradient(129.98deg, #4ADE80 -74.96%, rgba(74, 222, 128, 0) 207.28%);
+  border-radius: 20px;
+}
