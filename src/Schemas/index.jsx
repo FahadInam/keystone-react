@@ -15,7 +15,7 @@ export const SignUpSchema = Yup.object({
 const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/
 
 export const CompanyDetails = Yup.object({
-    dotnumber: Yup.number()
+    dot_number: Yup.number()
     .typeError('Not a valid DOT Number').notRequired(),
     companyname: Yup.string().min(2).max(25).required("Company name is required."),
     address: Yup.string().min(2).max(25).required("Address is required."),

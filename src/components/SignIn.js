@@ -53,9 +53,12 @@ function Signin() {
       // Handle the Google Sign-In response (e.g., send the response to your API for authentication)
       saveUserData(data);
     };
-    function saveToLocalStorage(id, token) {
+    function saveToLocalStorage(id, token, firstname, lastname) {
       localStorage.setItem('userId', id);
       localStorage.setItem('authToken', token);
+      localStorage.setItem('firstname', firstname);
+      localStorage.setItem('lastname', lastname);
+
     }
     const {values, errors ,touched ,handleBlur, handleChange, handleSubmit} = useFormik({
         initialValues: initialValues,
@@ -76,9 +79,19 @@ function Signin() {
         const response = await axios.post('http://192.168.18.43:8000/api/v1/login', data);
         const id = response.data.data.user.id;
         const token = response.data.data.token;
-        saveToLocalStorage(id, token);
+        const firstname = response.data.data.user.firstname;
+        const lastname = response.data.data.user.lastname;
 
-        navigate('/companyonboard');
+        saveToLocalStorage(id, token, firstname, lastname);
+        console.log(response.data.data.user.company.companyname)
+        if (response.data.data.user.company.companyname === null) {
+          navigate('/companyonboard');
+
+        }
+        else {
+          navigate('/invite');
+
+        }
       } catch (error) {
         if (error.response && error.response.status === 403) {
           console.log("Account not verified.");

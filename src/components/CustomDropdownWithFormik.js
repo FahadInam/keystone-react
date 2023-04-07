@@ -1,15 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../index.css";
 
-const CustomDropdown = ({ options, onOptionClick }) => {
-  const [selected, setSelected] = useState("Select an option");
+const CustomDropdown = ({ options, onOptionClick, selectedValue }) => {
+  const [selected, setSelected] = useState(selectedValue || "Select an option");
   const [isOpen, setIsOpen] = useState(false);
 
+  useEffect(() => {
+    setSelected(selectedValue || "Select an option");
+  }, [selectedValue]);
+
   const handleOptionClick = (option) => {
-    console.log(option)
+    console.log(option);
     setSelected(option);
     setIsOpen(false);
-    // onOptionClick && onOptionClick(option);
+    onOptionClick && onOptionClick(option);
   };
 
   return (

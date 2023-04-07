@@ -5,7 +5,10 @@ import companyimage from '../assets/teamimage.png';
 import { useFormik } from 'formik';
 import CustomDropdown from "./CustomDropdownWithFormik";
 import { InviteValidation } from '../Schemas';
-
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import Alert from '../components/smallcomponents/Alert';
 const options = ["User", "Admin"]; 
 
 const initialValues = {
@@ -15,6 +18,9 @@ const initialValues = {
   userType: "Select an option"
 }
 function InviteTeam() { 
+  const [alert, setAlert] = useState({ show: false, message: '', type: 'success' });
+    const navigate = useNavigate();
+
   const { values, errors, touched,  handleBlur,   handleChange,  handleSubmit, setFieldValue, setFieldTouched } = useFormik({
     initialValues: initialValues,
     validationSchema: InviteValidation,
@@ -25,7 +31,24 @@ function InviteTeam() {
         email: values.email,
         userType: values.userType, // Add userType to data object
       };
-    },
+      const authToken = localStorage.getItem('authToken');
+      console.log(authToken)
+      try {
+        const response = await axios.post(
+          `http://192.168.18.43:8000/api/v1/invites`,
+          data,
+          {
+            headers: {
+              'Authorization': `Bearer ${authToken}`
+            },
+          }
+        );
+        setAlert({ show: true, message: 'Invitation Sent!', type: 'success' });
+                // navigate('/dashboard');
+      } catch (error) {
+        console.log(error)
+      }    },
+
   });
 
   // CustomDropdown component with userType value update
@@ -40,18 +63,26 @@ function InviteTeam() {
       }
     };
 
-    return <CustomDropdown {...props} onOptionClick={onOptionClick} />;
+    return <CustomDropdown {...props} selectedValue={values.userType} onOptionClick={onOptionClick} />;
 };
 
 return (
+  
     <div className='flex'>
 
       <div className="w-1/2">
+        
 <div className="flex flex-col items-center justify-center h-screen relative">
 
 <img src={logo} alt="logo" className="ml-20 mt-10 absolute top-0 left-0" />
+<Alert
+        show={alert.show}
+        message={alert.message}
+        type={alert.type}
+        onClose={() => setAlert({ ...alert, show: false })}
+      />
 
-<div className='flex flex-col items-center bg-primaryBackground p-8 signin_css shadow-onboardingShadow'>
+<div className='flex flex-col items-center bg-primaryBackground p-8 signin_css shadow-onboardingShadow mt-5'>
             <h2 className="text-4xl font-bold mb-4 ">Invite Team Member</h2>
             <p className='mb-8 leading-4'>Invite your team members</p>
             <form  onSubmit={handleSubmit} className="flex flex-col">
@@ -114,13 +145,12 @@ return (
   <span className="form-error text-red-500">{errors.userType}</span>
 ) : null}
                 <div className='flex justify-end'>
-                <button type="submit" className="font-semibold mt-6 border border-solid bg-green-50 text-primarybtn border-gray-400  transition duration-300 ease-in-out rounded-lg  px-12 py-3 ">Skip</button>
+                <Link to="/dashboard" className="font-semibold mt-6 border border-solid bg-green-50 text-primarybtn border-gray-400  transition duration-300 ease-in-out rounded-lg  px-12 py-3 ">Skip</Link>
 
                 <button type="submit" className="font-semibold mt-6 bg-primarybtn  text-white  transition duration-300 ease-in-out rounded-lg  px-12 py-3 ml-4">Send</button>
                 </div>
             </form>
-            
-
+           
             </div>
 </div>
     </div>

@@ -31,8 +31,9 @@ import { useState } from 'react';
 
 // }
 function CompanyInfo() { 
-  
+  const [dotNumberError, setDotNumberError] = useState('');
   const [initialValues, setinitialValues] = useState({
+    dot_number: "",
     companyname: "",
     address: "",
     country: "",
@@ -40,7 +41,7 @@ function CompanyInfo() {
     zipcode: "",
     state: "",
     phonenumber: "",
-    timezone: "America/New_York"
+    timezone: "Select a timezone"
   })
   const navigate = useNavigate();
   // const [legalName, setLegalName] = useState('');
@@ -70,39 +71,43 @@ function CompanyInfo() {
         handleBlur({ target: { name: 'phonenumber' } });
       };
       const SearchDotNumber = async () => {
-        const dotnumber = document.getElementById('dotnumber').value;
+        const dot_number = document.getElementById('dot_number').value;
 
           // Validate the DOT number
   try {
-    await CompanyDetails.validateAt('dotnumber', { dotnumber });
+    await CompanyDetails.validateAt('dot_number', { dot_number });
   } catch (error) {
     console.error('Validation error:', error.message);
     return;
   }
-        try {
-          const response = await axios.get(`https://mobile.fmcsa.dot.gov/qc/services/carriers/${dotnumber}?webKey=6c771d2c3eb9245cfe8775fc0a17c1792a4cbb59&format=json`);
-          // console.log(response.data.content.carrier.legalName,response.data.content.carrier.phyCountry, response.data.content.carrier.phyCity, response.data.content.carrier.phyZipcode
-          //   , response.data.content.carrier.phyState  );
-          // navigate('/invite');-
-          const { legalName, phyCountry, phyCity, phyZipcode, phyState, phyStreet } = response.data.content.carrier;
-          console.log(legalName)
-          
-          resetForm({
-            values: {
-              ...initialValues,
-              companyname: legalName,
-              address: phyStreet,
-              country: phyCountry,
-              city: phyCity,
-              zipcode: phyZipcode,
-              state: phyState,
+  try {
+    const response = await axios.get(`https://mobile.fmcsa.dot.gov/qc/services/carriers/${dot_number}?webKey=6c771d2c3eb9245cfe8775fc0a17c1792a4cbb59&format=json`);
+  
+    if (response.data.content === null) {
+      setDotNumberError("No record found");
+        } else {
+          setDotNumberError("");
 
-            },
-          });
-
-         console.log(initialValues)
-
-        } catch (error) {
+      const { legalName, phyCountry, phyCity, phyZipcode, phyState, phyStreet } = response.data.content.carrier;
+      console.log(legalName);
+  
+      resetForm({
+        values: {
+          ...initialValues,
+          dot_number: values.dot_number,
+          companyname: legalName,
+          address: phyStreet,
+          country: phyCountry,
+          city: phyCity,
+          zipcode: phyZipcode,
+          state: phyState,
+        },
+      });
+  
+      console.log(initialValues);
+    }
+  } 
+   catch (error) {
           console.error('Error:', error);
         }
       }
@@ -111,6 +116,7 @@ function CompanyInfo() {
         validationSchema: CompanyDetails,     
         onSubmit: async (values) => {
             const data = {
+              dot_number: values.dot_number,
               companyname: values.companyname,
               address: values.address,
               country: values.country,
@@ -127,7 +133,7 @@ function CompanyInfo() {
             console.log(userId, authToken)
             try {
                 const response = await axios.post(`http://192.168.18.43:8000/api/v1/users/${userId}/companies`,
-                {},
+                data,
                 {
                   headers: {
                     'Authorization': `Bearer ${authToken}`,
@@ -155,21 +161,21 @@ return (
             <h2 className="text-4xl font-bold mb-4 ">Company Information</h2>
             <p className='mb-8 leading-4'>Add the company information</p>
             <form  onSubmit={handleSubmit} className="flex flex-col">
-                <label for="dotnumber" className='text-primarytext mb-2'>DOT Number<span className='ml-1 text-gray-400 text-sm'>(Optional)</span></label>
+                <label for="dot_number" className='text-primarytext mb-2'>DOT Number<span className='ml-1 text-gray-400 text-sm'>(Optional)</span></label>
             <div className='relative'>
                 <input 
-                id="dotnumber"
-                name='dotnumber'
+                id="dot_number"
+                name='dot_number'
                 type="name" 
-                value={values.dotnumber}
+                value={values.dot_number}
                 onChange={handleChange}
                 onBlur={handleBlur}
                  className="px-4 py-2 border border-gray-400 rounded h-12  btn_custom focus:ring-transparent"
                   />
                   <img src={searchicon} className='absolute top-2 right-3 cursor-pointer' onClick={SearchDotNumber} />
                   </div>
-                 { errors.dotnumber && touched.dotnumber ? <span className='form-error text-red-500' >{errors.dotnumber}</span> : null}
-
+                 { errors.dot_number && touched.dot_number ? <span className='form-error text-red-500' >{errors.dot_number}</span> : null}
+                 {dotNumberError && <span className="form-error text-red-500">{dotNumberError}</span>}
                  
 
                                     <label for="companyname" className='text-primarytext mb-2 mt-2'>Company</label>

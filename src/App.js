@@ -14,6 +14,7 @@ import store from './store/store';
 import SetNewPassword from './components/SetNewPassword';
 import PasswordChanged from './components/PasswordChanged'
 import Dashboard from './components/Dashboard';
+import InviteOnboard from './components/InviteOnboard';
 function AppContent() {
   const location = useLocation();
 
@@ -51,6 +52,7 @@ function App() {
           <Route path="/setpassword" element={<SetNewPassword />} />
           <Route path="/passwordchanged" element={<PasswordChanged />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/inviteonboard" element={<InviteOnboard />} />
 
         </Routes>
     </BrowserRouter>

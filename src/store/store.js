@@ -1,11 +1,12 @@
 // store.js
-import { createStore } from 'redux';
+import { createStore, combineReducers } from 'redux';
+import userReducer from '../reducers/userReducer';
 
 const initialState = {
   email: '',
 };
 
-const reducer = (state = initialState, action) => {
+const emailReducer  = (state = initialState, action) => {
   switch (action.type) {
     case 'SET_EMAIL':
       return { ...state, email: action.email };
@@ -18,6 +19,12 @@ const reducer = (state = initialState, action) => {
   }
 };
 
-const store = createStore(reducer);
+const rootReducer = combineReducers({
+  email: emailReducer,
+  user: userReducer,
+});
+
+
+const store = createStore(rootReducer);
 
 export default store;
