@@ -229,4 +229,9 @@ border-radius: 8px;
   bottom: 0;
   width: 4px;
   background-color: #17CF98; /* Replace with your desired color */
+  margin-right: 8px;
+}
+
+.icon-option {
+  margin-left: 10px;
 }

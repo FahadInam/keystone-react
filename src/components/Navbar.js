@@ -69,7 +69,10 @@ function Navbar() {
             `flex mb-2 py-3 nav-opt  ${isActive ? "selected-option" : ""}`
           }
         >
-          <CommodityIcon height="1.5rem" width="1.5rem" id="nav_icon" />
+          <CommodityIcon height="1.5rem" width="1.5rem" id="nav_icon" 
+          className={({ isActive }) => (isActive ? "icon-option" : "")}
+        
+        />
           <span className="font-medium text-2xl text-NavBarText pl-2 leading-6 custom-link">
             Commodity
           </span>
