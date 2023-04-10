@@ -1,81 +1,135 @@
-import React from 'react';
+import React, { useState } from "react";
+import logo from "../assets/Logo.png";
+import { NavLink } from "react-router-dom";
+import OrderIcon from "../assets/icons/OrderIcon";
+import ShipmentIcon from "../assets/icons/ShipmentIcon";
+import CustomerIcon from "../assets/icons/CustomerIcon";
+import EquipmentIcon from "../assets/icons/EquipmentIcon";
+import CommodityIcon from "../assets/icons/CommodityIcon";
+import InviteIcon from "../assets/icons/InviteIcon";
+import SettingIcon from "../assets/icons/SettingIcon";
+import arrowdown from "../assets/arrowdown.png";
+import invoiceicon from "../assets/invoiceicon.svg";
+import companyicon from "../assets/companyicon.svg";
 
-import logo from '../assets/Logo.png';
-import { Link } from 'react-router-dom';
-import ordericon from '../assets/ordericon.svg';
-import settingicon from '../assets/seticon.svg';
-import arrowdown from '../assets/arrowdown.png';
-import { useState } from 'react';
-import invoiceicon from '../assets/invoiceicon.svg';
-import companyicon from '../assets/companyicon.svg';
+function Navbar() {
+  const [isOpen, setIsOpen] = useState(false);
 
-function Navbar() { 
-    const [isOpen, setIsOpen] = useState(false);
-        return (
-
-    <nav >
-
-<img src={logo} alt="logo"  />
-                <div className='mt-24'>
-                <div className='flex mb-2 py-3  nav-opt'>
-                    <img src={ordericon} />
-                    <Link  className='font-medium text-2xl text-NavBarText pl-2 leading-6'> Order</Link>
-                </div>
-                <div className='flex  mb-2 py-3  nav-opt'>
-                    <img src={ordericon} />
-                    <Link className='font-medium text-2xl text-NavBarText pl-2 leading-6'> Shipment</Link>
-                </div>
-                <div className='flex  mb-2 py-3  nav-opt'>
-                    <img src={ordericon} />
-                    <Link className='font-medium text-2xl text-NavBarText pl-2 leading-6'> Customer</Link>
-                </div>
-                <div className='flex  mb-2 py-3  nav-opt'>
-                    <img src={ordericon} />
-                    <Link className='font-medium text-2xl text-NavBarText pl-2 leading-6'> Equipment</Link>
-                </div>
-                <div className='flex  mb-2 py-3  nav-opt'>
-                    <img src={ordericon} />
-                    <Link className='font-medium text-2xl text-NavBarText pl-2 leading-6'> Commodity</Link>
-                </div>
-                <div className='flex  mb-2 py-3  nav-opt'>
-                    <img src={ordericon} />
-                    <Link className='font-medium text-2xl text-NavBarText pl-2 leading-6'> Invite Team</Link>
-                </div>
-                <div>
-      <div className="flex mb-4 py-3  nav-opt">
-        <img src={settingicon} alt="Settings Icon" />
-        <Link className="font-medium text-2xl text-NavBarText pl-2 leading-6">Settings</Link>
-        <div className="ml-auto">
-          <img
-            src={arrowdown}
-            className="ml-auto cursor-pointer"
-            alt="Arrow Down Icon"
-            onClick={() => setIsOpen(!isOpen)}
-          />
+  return (
+    <nav>
+      <img src={logo} alt="logo" />
+      <div className="mt-24">
+      <NavLink
+          to="/order"
+          className={({ isActive }) =>
+            `flex mb-2 py-3 nav-opt ${isActive ? "selected-option" : ""}`
+          }
+        >
+          <OrderIcon height="1.5rem" width="1.5rem" id="nav_icon" />
+          <span className="font-medium text-2xl text-NavBarText pl-2 leading-6 custom-link">
+            Order
+          </span>
+        </NavLink>
+        <NavLink
+          to="/shipment"
+          className={({ isActive }) =>
+            `flex mb-2 py-3 nav-opt ${isActive ? "selected-option" : ""}`
+          }
+        >
+          <ShipmentIcon height="1.5rem" width="1.5rem" id="nav_icon" />
+          <span className="font-medium text-2xl text-NavBarText pl-2 leading-6 custom-link">
+            Shipment
+          </span>
+        </NavLink>
+        <NavLink
+          to="/customer"
+          className={({ isActive }) =>
+            `flex mb-2 py-3 nav-opt ${isActive ? "selected-option" : ""}`
+          }
+        >
+          <CustomerIcon height="1.5rem" width="1.5rem" id="nav_icon" />
+          <span className="font-medium text-2xl text-NavBarText pl-2 leading-6 custom-link">
+            Customer
+          </span>
+        </NavLink>
+        <NavLink
+          to="/equipment"
+          className={({ isActive }) =>
+            `flex mb-2 py-3 nav-opt ${isActive ? "selected-option" : ""}`
+          }
+        >
+          <EquipmentIcon height="1.5rem" width="1.5rem" id="nav_icon" />
+          <span className="font-medium text-2xl text-NavBarText pl-2 leading-6 custom-link">
+            Equipment
+          </span>
+        </NavLink>
+        <NavLink
+          to="/commodity"
+          className={({ isActive }) =>
+            `flex mb-2 py-3 nav-opt  ${isActive ? "selected-option" : ""}`
+          }
+        >
+          <CommodityIcon height="1.5rem" width="1.5rem" id="nav_icon" />
+          <span className="font-medium text-2xl text-NavBarText pl-2 leading-6 custom-link">
+            Commodity
+          </span>
+        </NavLink>
+        <NavLink
+          to="/invite"
+          className={({ isActive }) =>
+            `flex mb-2 py-3 nav-opt ${isActive ? "selected-option " : ""}`
+          }
+        >
+          <InviteIcon height="1.5rem" width="1.5rem" id="nav_icon" />
+          <span className="font-medium text-2xl text-NavBarText pl-2 leading-6 custom-link">
+          Invite Team
+          </span>
+        </NavLink>
+      
+      
+      <div>
+        <div className="flex mb-4 py-3 nav-opt">
+          <SettingIcon height="1.5rem" width="1.5rem" id="nav_icon" />
+          <NavLink
+            to="/settings"
+            className={({ isActive }) =>
+              `font-medium text-2xl text-NavBarText pl-2 leading-6 custom-link ${
+                isActive ? "selected-option" : ""
+              }`
+            }
+          >
+            Settings
+          </NavLink>
+          <div className="ml-auto">
+            <img
+              src={arrowdown}
+              className="ml-auto cursor-pointer"
+              alt="Arrow Down Icon"
+              onClick={() => setIsOpen(!isOpen)}
+            />
+          </div>
         </div>
+        {isOpen && (
+          <div>
+            <ul>
+              <div className="flex mb-2 px-10 py-2 cursor-pointer nav-opt">
+                <li className="cursor-pointer font-medium text-NavBarText custom-link">
+                  Invoice
+                </li>
+                <img src={invoiceicon} className="ml-auto" />
+              </div>
+              <div className="flex px-10 cursor-pointer py-2 nav-opt">
+                <li className="cursor-pointer font-medium text-NavBarText custom-link">
+                  Company Information
+                </li>
+                <img src={companyicon} className="ml-auto" />
+              </div>
+            </ul>
+          </div>
+        )}
       </div>
-      {isOpen && (
-        <div>
-          <ul>
-            <div className='flex mb-6 px-8'>
-            <li className="  hover:bg-gray-200 cursor-pointer font-medium text-NavBarText">Invoice</li>
-            <img src={invoiceicon} className='ml-auto' />
-
-            </div>
-            <div className='flex  px-8'>
-            <li className="  hover:bg-gray-200 cursor-pointer font-medium text-NavBarText">Company Information</li>
-            <img src={companyicon} className='ml-auto' />
-
-            </div>
-          </ul>
-        </div>
-      )}
     </div>
-                </div>
-    </nav>
-
-    
-
-)
+  </nav>
+);
 }
 export default Navbar;

@@ -172,10 +172,19 @@ border-radius: 8px;
   background: linear-gradient(269.46deg, rgba(23, 207, 152, 0.4) -157.04%, rgba(255, 255, 255, 0) 176.19%);
   border-radius: 8px;
 }
-.nav-opt > img:hover {
+.nav-opt:hover  .order_icon path {
+  fill: #17CF98 !important;
+}
+.nav-opt:hover  #nav_icon path {
   fill: #17CF98 !important;
 }
 
+.nav-opt:hover   .custom-link {
+  color: #17CF98 !important;
+}
+.nav-opt {
+  position: relative;
+}
 /* Main body */
 .nav-top_css {
   height: 64px;
@@ -187,4 +196,37 @@ border-radius: 8px;
 .user_css {
   background: linear-gradient(129.98deg, #4ADE80 -74.96%, rgba(74, 222, 128, 0) 207.28%);
   border-radius: 20px;
+}
+
+.vertical-line {
+  width: 1px;
+ height: 48px; 
+  background-color: #9CA3AF; 
+  margin-left: 50px;
+}
+.help:hover path {
+  fill: blue ;
+}
+
+
+.selected-option {
+  /* Add the styling for the selected option here, e.g., */
+  background: linear-gradient(269.46deg, rgba(23, 207, 152, 0.4) -157.04%, rgba(255, 255, 255, 0) 176.19%);
+  border-radius: 8px;
+  
+}
+.selected-option   .custom-link {
+  color: #17CF98 !important;
+}
+.selected-option   #nav_icon path {
+  fill: #17CF98 !important;
+}
+.selected-option::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background-color: #17CF98; /* Replace with your desired color */
 }
