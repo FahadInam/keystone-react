@@ -220,6 +220,7 @@ border-radius: 8px;
 }
 .selected-option   #nav_icon path {
   fill: #17CF98 !important;
+  margin-left: 10px;
 }
 .selected-option::before {
   content: "";
@@ -231,7 +232,18 @@ border-radius: 8px;
   background-color: #17CF98; /* Replace with your desired color */
   margin-right: 8px;
 }
-
-.icon-option {
-  margin-left: 10px;
+/* Commodity Page */
+.btn_css {
+  background-color: #60A498;
 }
+.modal_btn_custom {
+  background-color: inherit;
+  border: 1px solid #60A498;
+  border-radius: 8px;
+}
+.commodity_dropdown_div {
+  width: 50%;
+}
+/* .icon-option {
+  margin-left: 10px;
+} */
