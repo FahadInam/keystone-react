@@ -54,7 +54,7 @@ function Commodity() {
 
       <Modal isOpen={isModalOpen} onClose={closeModal}>
         {/* Add modal content here */}
-        <h1 className='text-3xl font-semibold text-center'>Add new commodities</h1>
+        <h1 className='text-3xl font-semibold text-center mb-10'>Add new commodities</h1>
 
         <div className='flex justify-between'>
             <div> 
@@ -141,13 +141,13 @@ className="float-right"
         </div>
       </div>
 
-      <div className='flex justify-center mt-5'>
-        <button className='h-12 text-pirmaryColor  rounded-lg px-12 py-4 border-slate-500 mr-2'
+      <div className='flex justify-center mt-12'>
+        <button className='text-black py-4 px-8 rounded-lg leading-4 border border-gray-400 mr-2'
         
         onClick={closeModal}
         >Cancel</button>
         <button
-  className=" text-white py-4 px-8 rounded-lg leading-4 btn_css"
+  className=" text-white py-4 px-8 rounded-lg leading-4 btn_css ml-2"
 >
   Add Commodity
 </button>
