@@ -47,3 +47,11 @@ export const InviteValidation = Yup.object({
     .notOneOf(["Select an option"], "Please select a user role")
     .required("Required"),
 })
+
+export const CommodityValidation = Yup.object({
+    gl_code: Yup.string().min(2).max(25).required("Enter a valid code."),
+    name: Yup.string().min(2).max(25).required("Enter a valid commodity name"),
+    commodity_group_id: Yup.string().required('Please select a commodity group.'),
+    rate_by: Yup.string().required('Please select a default rate.')
+
+})

@@ -9,6 +9,8 @@ import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import jwt_decode from "jwt-decode"
+import { post  } from "../services/api";
+
 const initialValues = {
     firstname: "",
     lastname: "",
@@ -75,24 +77,26 @@ function Signup() {
 
         }
     })
-      const saveUserData = async (data) => {
-        try {
-          const response = await axios.post('http://192.168.18.43:8000/api/v1/register', data);
-  
-          if (response.status === 200) {
-            console.log("Registration successful");
-            console.log( data.email)
-            dispatch({ type: 'SET_EMAIL', email: data.email }); // Update the email state
-                            navigate('/verify');
-          } else {
-            console.log("Registration failed");
-            // Handle registration failure here
-          }
-        } catch (error) {
-          console.log(error);
+    const saveUserData = async (data) => {
+      try {
+        // Update the API endpoint to use a relative path
+        const response = await post('/api/v1/register', data);
+        if (response.status) {
+          console.log("Registration successful");
+          console.log(data.email);
+          dispatch({ type: 'SET_EMAIL', email: data.email }); // Update the email state
+          console.log("here")
+          navigate('/verify');
+        } else {
+          console.log("Registration failed");
           // Handle registration failure here
         }
+      } catch (error) {
+        console.log(error);
+        // Handle registration failure here
       }
+    };
+    
     return (
 <div>
         <div className="flex flex-col items-center justify-center h-screen">

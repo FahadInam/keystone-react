@@ -7,6 +7,8 @@ import EmailContext from '../store/store';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import { post  } from "../services/api";
+
 function EmailVerification({ userEmail }) { 
 
     const email = useSelector((state) => state.email);    
@@ -14,9 +16,9 @@ function EmailVerification({ userEmail }) {
 
     async function handleResendLink() {
         try {
-          const response = await axios.post('http://192.168.18.43:8000/api/v1/email/resend', {email});
+          const response = await post('/api/v1/email/resend', {email});
       
-          if (response.status === 200) {
+          if (response.status) {
             console.log('Link resend successful');
             // Handle success here
           } else {

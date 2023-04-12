@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import jwt_decode from "jwt-decode"
 import { useState, useEffect } from 'react';
+import { post  } from "../services/api";
 
 const initialValues = {
     email: "",
@@ -76,21 +77,19 @@ function Signin() {
     })
     const saveUserData = async (data) => {
       try {
-        const response = await axios.post('http://192.168.18.43:8000/api/v1/login', data);
-        const id = response.data.data.user.id;
-        const token = response.data.data.token;
-        const firstname = response.data.data.user.firstname;
-        const lastname = response.data.data.user.lastname;
-
+        // Update the API endpoint to use a relative path
+        const response = await post('/api/v1/login', data);
+        const id = response.data.user.id;
+        const token = response.data.token;
+        const firstname = response.data.user.firstname;
+        const lastname = response.data.user.lastname;
+    
         saveToLocalStorage(id, token, firstname, lastname);
-        console.log(response.data.data.user.company.companyname)
-        if (response.data.data.user.company.companyname === null) {
+        console.log(response.data.user.company.companyname)
+        if (response.data.user.company.companyname === null) {
           navigate('/companyonboard');
-
-        }
-        else {
+        } else {
           navigate('/invite');
-
         }
       } catch (error) {
         if (error.response && error.response.status === 403) {
@@ -102,6 +101,8 @@ function Signin() {
         }
       }
     }
+    
+    
     return (
         
         <div className="flex flex-col items-center justify-center h-screen relative">

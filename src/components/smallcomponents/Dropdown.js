@@ -55,6 +55,8 @@ const Dropdown = ({ values, onAddMore }) => {
             {showInput ? (
               <div className="flex px-4 py-2">
                 <input
+                 id="name"
+                 type="string" 
                   className="border border-gray-300 text-sm w-full mr-2 rounded-md"
                   value={inputValue}
                   onChange={handleInputChange}

@@ -14,6 +14,7 @@ import 'react-phone-input-2/lib/style.css';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import { post  } from "../services/api";
 
 // import 'react-select/dist/react-select.css';
 
@@ -132,15 +133,11 @@ function CompanyInfo() {
             const authToken = localStorage.getItem('authToken');
             console.log(userId, authToken)
             try {
-                const response = await axios.post(`http://192.168.18.43:8000/api/v1/users/${userId}/companies`,
+              const response = await post(
+                `/api/v1/users/${userId}/companies`,
                 data,
-                {
-                  headers: {
-                    'Authorization': `Bearer ${authToken}`,
-                    'Accept': 'application/json'
-                  },
-                }
-                );
+                authToken
+              );
                 navigate('/invite');
 
               } catch (error) {

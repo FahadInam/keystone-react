@@ -3,10 +3,80 @@ import Navbar from '../Navbar';
 import Navtop from '../Navtop';
 import Modal from '../smallcomponents/Modal';
 import Dropdown from '../smallcomponents/Dropdown';
+import { CommodityValidation } from '../../Schemas';
+import { useFormik } from 'formik';
+import axios from 'axios';
+import { get  } from "../../services/api";
+import  { useEffect } from 'react';
+import { post  } from "../../services/api";
+
+const initialValues = {
+    gl_code: "",
+    name: "",
+    commodity_group_id: "",
+    rate_by: ""
+}
 
 function Commodity() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
+  const [commodityGroups, setCommodityGroups] = useState([]);
+  const [newCommodityGroup, setNewCommodityGroup] = useState('');
+
+
+  const authToken = localStorage.getItem('authToken');
+  const fetchCommodityGroups = async () => {
+    try {
+      const response = await get('/api/v1/commodity-groups' ,
+      authToken);
+      if (Array.isArray(response.data)) {
+        setCommodityGroups(response.data);
+      }
+    } catch (error) {
+      console.error('Error fetching commodity groups:', error);
+    }
+  };
+
+  useEffect(() => {
+    if (isModalOpen) {
+      fetchCommodityGroups();
+    }
+  }, [isModalOpen, ]);
+
+  const PostCommodityGroup = async (data) => {
+    const commoditydata = { name: data };
+    try {
+      const response = await post('/api/v1/commodity-groups' , commoditydata,
+      authToken);
+      fetchCommodityGroups();
+
+    //   setCommodityGroups(response.data);
+    } catch (error) {
+      console.error('Error fetching commodity groups:', error);
+    }
+  };
+
+  const {values, errors ,touched ,handleBlur, handleChange, handleSubmit} = useFormik({
+    initialValues: initialValues,
+    validationSchema: CommodityValidation,
+    onSubmit: async (values) => {
+        const data = {
+          email: values.email,
+        };
+        console.log(data)
+        try {
+            const response = await axios.post('http://192.168.18.43:8000/api/v1/forgot-password', data);
+            // dispatch({ type: 'SET_FORGOT_EMAIL', email: values.email }); // Update the email state
+
+            // navigate('/emailsent');
+          } catch (error) {
+            console.log(error)
+          }
+       
+    }
+})
+
+
 
   const handleCheckboxChange = (e) => {
     console.log("here")
@@ -54,10 +124,12 @@ function Commodity() {
 
       <Modal isOpen={isModalOpen} onClose={closeModal}>
         {/* Add modal content here */}
+        <form onSubmit={handleSubmit} >
         <h1 className='text-3xl font-semibold text-center mb-10'>Add new commodities</h1>
 
         <div className='flex justify-between'>
             <div> 
+                
             <label for="gl_code" className='text-primarytext mb-2'>Commodity Code</label>
 
             <input 
@@ -65,9 +137,9 @@ function Commodity() {
                 name='gl_code'
                 type="string" 
                 placeholder="Enter Commodity Code"
-                // value={values.firstname}
-                // onChange={handleChange}
-                // onBlur={handleBlur}
+                value={values.gl_code}
+                onChange={handleChange}
+                onBlur={handleBlur}
                  className="px-4 py-2 border border-gray-400 rounded h-12  modal_btn_custom focus:ring-transparent flex flex-col"
                   />
             </div>
@@ -79,9 +151,9 @@ function Commodity() {
                 name='name'
                 type="text" 
                 placeholder="Enter Commodity Code"
-                // value={values.firstname}
-                // onChange={handleChange}
-                // onBlur={handleBlur}
+                value={values.name}
+                onChange={handleChange}
+                onBlur={handleBlur}
                  className="px-4 py-2 border border-gray-400 rounded h-12  modal_btn_custom focus:ring-transparent flex flex-col"
                   />
             </div>
@@ -94,9 +166,6 @@ function Commodity() {
                 name='description'
                 type="text" 
                 placeholder="Enter Commodity Description"
-                // value={values.firstname}
-                // onChange={handleChange}
-                // onBlur={handleBlur}
                  className="px-4 py-2 border border-gray-400 rounded  modal_btn_custom h-32 w-full focus:ring-transparent flex flex-col"
                   />
         </div>
@@ -104,9 +173,11 @@ function Commodity() {
             <div className='commodity_dropdown_div'>
             <p className='text-primarytext'>Commodity Group</p>
         <Dropdown
-  values={['Value 1', 'Value 2', 'Value 3']}
-  onAddMore={(value) => {
+      values={commodityGroups.map((group) => group.name)}
+        onAddMore={(value) => {
     console.log('Add more clicked for value:', value);
+    setNewCommodityGroup(value);
+    PostCommodityGroup(value);
   }}
 />
 </div>
@@ -151,7 +222,9 @@ className="float-right"
 >
   Add Commodity
 </button>
+
       </div>
+      </form>
       </Modal>
     </div>
   );
