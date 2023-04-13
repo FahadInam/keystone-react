@@ -28,7 +28,7 @@ function Commodity() {
   const [selectedCommodityGroup, setSelectedCommodityGroup] = useState('');
   const [selectedDefaultRate, setSelectedDefaultRate] = useState('');
   
-  const headers = ['Commodity Code / GL Revenue Code', 'Commodity Name', 'Commodity Group' , 'Default Rate by', 'Default Rate by', 'Action' ];
+  const headers = ['Commodity Code / GL Revenue Code', 'Commodity Name', 'Commodity Group' , 'Default Rate by', 'Inactive Commodity', 'Action' ];
   const data = [
     { CommodityCode: 'SH1234', CommodityName: 'Couch', CommodityGroup: 'Furniture', DefaultRateby: 'Flat Amount' , InactiveCommodity: 'Yes'   },
     { CommodityCode: 'SH1234', CommodityName: 'Couch', CommodityGroup: 'Furniture', DefaultRateby: 'Flat Amount' , InactiveCommodity: 'Yes'  },

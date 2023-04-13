@@ -13,7 +13,7 @@ const TableRow = ({ row }) => {
         console.log('Delete clicked', row);
       };
       return (
-        <tr>
+        <tr >
           {Object.values(row).map((value, index) => (
             <td key={index} className=" px-4 py-2  text-center">
               {value}

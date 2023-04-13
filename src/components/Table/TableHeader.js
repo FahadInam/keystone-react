@@ -5,7 +5,7 @@ const TableHeader = ({ headers }) => {
     <thead>
       <tr>
         {headers.map((header, index) => (
-          <th key={index} className="px-4 py-2 commodity_table text-base h-12 ">
+          <th key={index} className="px-4 py-2 commodity_table text-base h-12 font-semibold">
             {header}
           </th>
         ))}

@@ -253,3 +253,6 @@ border-radius: 8px;
   background: #F9FAFB;
 box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
 }
+.table-custom tbody tr:first-child td {
+  padding-top: 2rem; /* Adjust this value to your desired spacing */
+}
