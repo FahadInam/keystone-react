@@ -249,3 +249,7 @@ border-radius: 8px;
 /* .icon-option {
   margin-left: 10px;
 } */
+.commodity_table {
+  background: #F9FAFB;
+box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+}

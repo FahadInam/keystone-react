@@ -2,79 +2,67 @@ import React, { useState } from 'react';
 
 const Dropdown = ({ values, onAddMore }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [showInput, setShowInput] = useState(false);
-  const [inputValue, setInputValue] = useState('');
-  const [selectedValue, setSelectedValue] = useState('Select Value');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedValue, setSelectedValue] = useState('');
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
 
-  const handleAddMoreClick = () => {
-    setShowInput(true);
-  };
-
-  const handleInputChange = (e) => {
-    setInputValue(e.target.value);
-  };
-
-  const handleInputSubmit = () => {
-    onAddMore(inputValue);
-    setSelectedValue(inputValue);
-    setShowInput(false);
-    setInputValue('');
-  };
-
-  const handleValueClick = (value) => {
+  const handleValueClick = (value, isNewValue = false) => {
     setSelectedValue(value);
+    setSearchTerm('');
     setIsOpen(false);
+
+    if (isNewValue) {
+      onAddMore(value);
+    }
   };
+
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
+    if (!isOpen) {
+      toggleDropdown();
+    }
+  };
+
+  const filteredValues = values.filter(value =>
+    value.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const isNewValue = searchTerm !== '' && filteredValues.length === 0;
 
   return (
     <div className="relative inline-block text-left w-full ">
-      <button
-        className="text-left  w-11/12  rounded-md border h-12 border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium  modal_btn_custom text-gray-500 "
-        onClick={toggleDropdown}
-      >
-        {selectedValue}
-       
-      </button>
+      <input
+        className="text-left w-11/12 rounded-md border h-12 border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium modal_btn_custom text-gray-700"
+        type="text"
+        defaultValue={selectedValue}
+        placeholder={selectedValue || 'Select Value'}
+        onChange={handleSearchChange}
+        onFocus={toggleDropdown}
+        onBlur={() => setTimeout(() => setIsOpen(false), 200)}
+      />
       {isOpen && (
-        <div className="origin-top-right absolute left-0 mt-2  rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5  w-11/12">
+        <div className="origin-top-right absolute left-0 mt-2 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 w-11/12 max-h-36 overflow-y-auto ">
           <div className="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
-            {values.map((value, index) => (
+            {filteredValues.map((value, index) => (
               <button
                 key={index}
-                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                className="block px-4 py-2 text-base text-gray-700 hover:bg-hoverPrimary hover:text-gray-900 w-full text-left rounded-lg"
                 role="menuitem"
                 onClick={() => handleValueClick(value)}
               >
                 {value}
               </button>
             ))}
-            {showInput ? (
-              <div className="flex px-4 py-2">
-                <input
-                 id="name"
-                 type="string" 
-                  className="border border-gray-300 text-sm w-full mr-2 rounded-md"
-                  value={inputValue}
-                  onChange={handleInputChange}
-                />
-                <button
-                  className="text-sm bg-blue-500 text-white py-1 px-2 rounded-md"
-                  onClick={handleInputSubmit}
-                >
-                  Add
-                </button>
-              </div>
-            ) : (
+            {isNewValue && (
               <button
-                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                className="block px-4 py-2 text-base text-gray-700 hover:bg-hoverPrimary hover:text-gray-900 w-full text-left rounded-lg"
                 role="menuitem"
-                onClick={handleAddMoreClick}
+                onClick={() => handleValueClick(searchTerm, true)}
               >
-                Add more
+                Add "{searchTerm}"
               </button>
             )}
           </div>

@@ -9,20 +9,34 @@ import axios from 'axios';
 import { get  } from "../../services/api";
 import  { useEffect } from 'react';
 import { post  } from "../../services/api";
-
+import DynamicTable from '../Table/DynamicTable';
 const initialValues = {
     gl_code: "",
     name: "",
+    description: "",
     commodity_group_id: "",
     rate_by: ""
 }
 
 function Commodity() {
+
+    
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
   const [commodityGroups, setCommodityGroups] = useState([]);
-  const [newCommodityGroup, setNewCommodityGroup] = useState('');
+  const [defaultRate, setdefaultRate] = useState([]);
+  const [selectedCommodityGroup, setSelectedCommodityGroup] = useState('');
+  const [selectedDefaultRate, setSelectedDefaultRate] = useState('');
+  
+  const headers = ['Commodity Code / GL Revenue Code', 'Commodity Name', 'Commodity Group' , 'Default Rate by', 'Default Rate by', 'Action' ];
+  const data = [
+    { CommodityCode: 'SH1234', CommodityName: 'Couch', CommodityGroup: 'Furniture', DefaultRateby: 'Flat Amount' , InactiveCommodity: 'Yes'   },
+    { CommodityCode: 'SH1234', CommodityName: 'Couch', CommodityGroup: 'Furniture', DefaultRateby: 'Flat Amount' , InactiveCommodity: 'Yes'  },
+    { CommodityCode: 'SH1234', CommodityName: 'Couch', CommodityGroup: 'Furniture', DefaultRateby: 'Flat Amount' , InactiveCommodity: 'Yes'   },
 
+  ];
+
+  
 
   const authToken = localStorage.getItem('authToken');
   const fetchCommodityGroups = async () => {
@@ -36,14 +50,28 @@ function Commodity() {
       console.error('Error fetching commodity groups:', error);
     }
   };
-
+  const fetchdefaultRateBy = async () => {
+    try {
+      const response = await get('/api/v1/commodities/1/rates' ,
+      authToken);
+      if (Array.isArray(response.data)) {
+        setdefaultRate(response.data);
+      }
+    } catch (error) {
+      console.error('Error fetching default rates:', error);
+    }
+  };
   useEffect(() => {
     if (isModalOpen) {
       fetchCommodityGroups();
+      fetchdefaultRateBy();
     }
-  }, [isModalOpen, ]);
+  }, [isModalOpen]);
+  
+
 
   const PostCommodityGroup = async (data) => {
+    console.log("here")
     const commoditydata = { name: data };
     try {
       const response = await post('/api/v1/commodity-groups' , commoditydata,
@@ -56,22 +84,42 @@ function Commodity() {
     }
   };
 
+  const PostDefaultRate = async (data) => {
+    const defaultratedata = { name: data };
+    try {
+      const response = await post('/api/v1/commodities/1/rates' , defaultratedata,
+      authToken);
+      fetchdefaultRateBy();
+
+    //   setCommodityGroups(response.data);
+    } catch (error) {
+      console.error('Error fetching commodity groups:', error);
+    }
+  };
+
   const {values, errors ,touched ,handleBlur, handleChange, handleSubmit} = useFormik({
+    
     initialValues: initialValues,
     validationSchema: CommodityValidation,
+    
     onSubmit: async (values) => {
+        console.log('Submitting form...');
         const data = {
-          email: values.email,
+            gl_code: values.gl_code,
+            name: values.name,
+            description: values.description,
+            commodity_group_id: selectedCommodityGroup, // use the state value here
+            rate_by: selectedDefaultRate, // use the state value here
         };
         console.log(data)
-        try {
-            const response = await axios.post('http://192.168.18.43:8000/api/v1/forgot-password', data);
-            // dispatch({ type: 'SET_FORGOT_EMAIL', email: values.email }); // Update the email state
+        // try {
+        //     const response = await axios.post('http://192.168.18.43:8000/api/v1/forgot-password', data);
+        //     // dispatch({ type: 'SET_FORGOT_EMAIL', email: values.email }); // Update the email state
 
-            // navigate('/emailsent');
-          } catch (error) {
-            console.log(error)
-          }
+        //     // navigate('/emailsent');
+        //   } catch (error) {
+        //     console.log(error)
+        //   }
        
     }
 })
@@ -101,7 +149,7 @@ function Commodity() {
         </div>
         <div className="main-content_css pl-8 pr-16">
           <div className="flex justify-between">
-            <div className="flex flex-col mt-16">
+            <div className="flex flex-col mt-8">
               <h4 className="mb-6 font-medium text-3xl leading-8">
                 Add Commodity
               </h4>
@@ -109,23 +157,27 @@ function Commodity() {
                 Add your new commodity
               </p>
             </div>
-            <div className="flex items-end">
+            <div className="flex items-center mt-10">
             <button
   className=" text-white py-4 px-8 rounded-lg leading-4 btn_css"
   onClick={openModal}
+  type="button"
 >
   Add Commodity
 </button>
             </div>
           </div>
           <hr className="mt-12" />
+
+<div className='mt-12'>
+      <DynamicTable headers={headers} data={data}  />
+      </div>
         </div>
       </div>
 
       <Modal isOpen={isModalOpen} onClose={closeModal}>
-        {/* Add modal content here */}
-        <form onSubmit={handleSubmit} >
-        <h1 className='text-3xl font-semibold text-center mb-10'>Add new commodities</h1>
+      <form onSubmit={handleSubmit}>
+          <h1 className='text-3xl font-semibold text-center mb-10'>Add new commodities</h1>
 
         <div className='flex justify-between'>
             <div> 
@@ -165,6 +217,9 @@ function Commodity() {
                 id="description"
                 name='description'
                 type="text" 
+                value={values.description}
+                onChange={handleChange}
+                onBlur={handleBlur}
                 placeholder="Enter Commodity Description"
                  className="px-4 py-2 border border-gray-400 rounded  modal_btn_custom h-32 w-full focus:ring-transparent flex flex-col"
                   />
@@ -172,11 +227,12 @@ function Commodity() {
         <div className='flex mt-6'>
             <div className='commodity_dropdown_div'>
             <p className='text-primarytext'>Commodity Group</p>
-        <Dropdown
-      values={commodityGroups.map((group) => group.name)}
-        onAddMore={(value) => {
-    console.log('Add more clicked for value:', value);
-    setNewCommodityGroup(value);
+            <Dropdown
+  id="commodity_group_id"
+  name='commodity_group_id'
+  values={commodityGroups.map((group) => group.name)}
+  onChange={(value) => setSelectedCommodityGroup(value)}
+  onAddMore={(value) => {
     PostCommodityGroup(value);
   }}
 />
@@ -184,13 +240,18 @@ function Commodity() {
 <div className='commodity_dropdown_div '>
 <p className='text-primarytext'>Default Rate by</p>
 
+
 <Dropdown
-className="float-right"
-  values={['Value 4', 'Value 5', 'Value 6']}
+  id="rate_by"
+  name='rate_by'
+  className="float-right"
+  values={defaultRate.map((group) => group.name)}
+  onChange={(value) => setSelectedDefaultRate(value)}
   onAddMore={(value) => {
-    console.log('Add more clicked for value:', value);
+    PostDefaultRate(value);
   }}
 />
+
 </div>
 
         </div>
@@ -213,12 +274,17 @@ className="float-right"
       </div>
 
       <div className='flex justify-center mt-12'>
-        <button className='text-black py-4 px-8 rounded-lg leading-4 border border-gray-400 mr-2'
-        
+      <button
+        className="text-black py-4 px-8 rounded-lg leading-4 border border-gray-400 mr-2"
         onClick={closeModal}
-        >Cancel</button>
-        <button
-  className=" text-white py-4 px-8 rounded-lg leading-4 btn_css ml-2"
+        type="button"
+      >
+        Cancel
+      </button>
+      <button
+  className="text-white py-4 px-8 rounded-lg leading-4 btn_css ml-2"
+  type="submit"
+  
 >
   Add Commodity
 </button>
