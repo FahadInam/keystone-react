@@ -1,9 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
-const Dropdown = ({ values, onAddMore }) => {
+const Dropdown = ({ values, value, onChange, onAddMore }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedValue, setSelectedValue] = useState('');
+
+  useEffect(() => {
+    setSelectedValue(value);
+  }, [value]);
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
@@ -16,6 +20,17 @@ const Dropdown = ({ values, onAddMore }) => {
 
     if (isNewValue) {
       onAddMore(value);
+    }
+
+    onChange(value); // Add this line
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Backspace' && e.target.value === selectedValue) {
+      setSelectedValue('');
+      if (onChange) {
+        onChange('');
+      }
     }
   };
 
@@ -37,9 +52,10 @@ const Dropdown = ({ values, onAddMore }) => {
       <input
         className="text-left w-11/12 rounded-md border h-12 border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium modal_btn_custom text-gray-700"
         type="text"
-        defaultValue={selectedValue}
+        value={searchTerm || selectedValue} // Change defaultValue to value
         placeholder={selectedValue || 'Select Value'}
         onChange={handleSearchChange}
+        onKeyDown={handleKeyDown}
         onFocus={toggleDropdown}
         onBlur={() => setTimeout(() => setIsOpen(false), 200)}
       />

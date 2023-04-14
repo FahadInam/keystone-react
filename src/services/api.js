@@ -36,6 +36,31 @@ const post = async (endpoint, data, authToken) => {
       throw error;
     }
   };
-  
+  const put = async (endpoint, data, authToken) => {
+    try {
+      const response = await axios.put(endpoint, data, {
+        headers: {
+          'Authorization': `Bearer ${authToken}`,
+        },
+      });
+      return response.data;
+    } catch (error) {
+      console.error(`Error updating data to ${endpoint}:`, error);
+      throw error;
+    }
+  };
+  const deleteRequest  = async (url, authToken) => {
+    try {
+      const response = await axios.delete(url, {
+        headers: {
+          'Authorization': `Bearer ${authToken}`,
+        },
+      });
+      return response.data;
+    } catch (error) {
+      console.error(`Error deleting data from ${url}:`, error);
+      throw error;
+    }
+  };
 
-export { instance, get, post };
+export { instance, get, post, deleteRequest, put};

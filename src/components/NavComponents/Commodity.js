@@ -9,14 +9,18 @@ import axios from 'axios';
 import { get  } from "../../services/api";
 import  { useEffect } from 'react';
 import { post  } from "../../services/api";
+import { deleteRequest  } from "../../services/api";
+import { put  } from "../../services/api";
+
 import DynamicTable from '../Table/DynamicTable';
 const initialValues = {
     gl_code: "",
     name: "",
     description: "",
     commodity_group_id: "",
-    rate_by: ""
-}
+    rate_by_id: "",
+    active_status: false,
+  }
 
 function Commodity() {
 
@@ -27,12 +31,16 @@ function Commodity() {
   const [defaultRate, setdefaultRate] = useState([]);
   const [selectedCommodityGroup, setSelectedCommodityGroup] = useState('');
   const [selectedDefaultRate, setSelectedDefaultRate] = useState('');
-  
-  const headers = ['Commodity Code / GL Revenue Code', 'Commodity Name', 'Commodity Group' , 'Default Rate by', 'Inactive Commodity', 'Action' ];
+  const [tableData, settableData] = useState([]);
+  const [currentAction, setCurrentAction] = useState("Add");
+
+
+  const CreateTitle = "Add new commodities"
+  const headers = ['Commodity Code / GL Revenue Code', 'Commodity Name', 'Commodity Group' , 'Default Rate by', 'Commodity Status', 'Action' ];
   const data = [
-    { CommodityCode: 'SH1234', CommodityName: 'Couch', CommodityGroup: 'Furniture', DefaultRateby: 'Flat Amount' , InactiveCommodity: 'Yes'   },
-    { CommodityCode: 'SH1234', CommodityName: 'Couch', CommodityGroup: 'Furniture', DefaultRateby: 'Flat Amount' , InactiveCommodity: 'Yes'  },
-    { CommodityCode: 'SH1234', CommodityName: 'Couch', CommodityGroup: 'Furniture', DefaultRateby: 'Flat Amount' , InactiveCommodity: 'Yes'   },
+    { CommodityCode: 'SH1234', CommodityName: 'Couch', CommodityGroup: 'Furniture', DefaultRateby: 'Flat Amount' , CommodityStatus: 'Active'   },
+    { CommodityCode: 'SH1234', CommodityName: 'Couch', CommodityGroup: 'Furniture', DefaultRateby: 'Flat Amount' , CommodityStatus: 'Inactive'  },
+    { CommodityCode: 'SH1234', CommodityName: 'Couch', CommodityGroup: 'Furniture', DefaultRateby: 'Flat Amount' , CommodityStatus: 'Active'   },
 
   ];
 
@@ -97,45 +105,142 @@ function Commodity() {
     }
   };
 
-  const {values, errors ,touched ,handleBlur, handleChange, handleSubmit} = useFormik({
+  const handleEditAction = (id) => {
+  
+    // Open the modal   
+     updateid = id
+    console.log(updateid)
+    setIsModalOpen(true);
+    setCurrentAction("")
+    FetchDataToEdit(id);
+
+  };
+  const FetchDataToEdit = async (id) => {
+    try {
+      const response = await get(`/api/v1/commodities/${id}` ,
+      authToken);
+      console.log(response.data.gl_code)
+      values.gl_code = response.data.gl_code
+       values.name = response.data.name
+     values.description = response.data.description
+    //  values.commodity_group_id = response.data.commodity_group_id
+    //   values.rate_by_id = response.data.rate_by_id
+     values.active_status = response.active_status
+    console.log( response.data.commodity_group_id)
+    
+    } catch (error) {
+      console.error('Error fetching commodity data:', error);
+    }
+  }
+  var updateid;
+  const handleDeleteAction = (id) => {
+  console.log(id)
+    // Open the modal
+    // setIsModalOpen(true);
+    // setCurrentAction("")
+    // FetchDataToEdit(id);
+    DeleteDataFromRow(id);
+  };
+const DeleteDataFromRow = async (id) => {
+  try{
+    const response =  await deleteRequest(`http://192.168.100.65:8000/api/v1/commodities/${id}` ,
+    authToken);
+    fetchCommodities(); // Re-fetch the list of commodities after deleting
+    console.log(response)
+  }
+  catch (error)
+{
+  console.error('Error', error)
+}}
+  
+  const {values, errors ,touched ,handleBlur, handleChange, handleSubmit, setFieldValue } = useFormik({
     
     initialValues: initialValues,
-    validationSchema: CommodityValidation,
+    // validationSchema: CommodityValidation,
     
     onSubmit: async (values) => {
-        console.log('Submitting form...');
         const data = {
             gl_code: values.gl_code,
             name: values.name,
             description: values.description,
-            commodity_group_id: selectedCommodityGroup, // use the state value here
-            rate_by: selectedDefaultRate, // use the state value here
+            commodity_group_id: values.commodity_group_id,
+            rate_by_id: values.rate_by_id,
+            active_status: values.active_status,
         };
         console.log(data)
-        // try {
-        //     const response = await axios.post('http://192.168.18.43:8000/api/v1/forgot-password', data);
-        //     // dispatch({ type: 'SET_FORGOT_EMAIL', email: values.email }); // Update the email state
-
-        //     // navigate('/emailsent');
-        //   } catch (error) {
-        //     console.log(error)
-        //   }
-       
+        if(currentAction === "Add") {
+        try {
+            const response = await post('/api/v1/commodities', data,
+            authToken);
+            if (response.status) {
+              setIsModalOpen(false); 
+              // fetchCommodities();
+            }
+            
+          } catch (error) {
+            console.log(error)
+          }
+        }
+        else {
+          try {
+            const response = await put(`/api/v1/commodities/${updateid}`, data,
+            authToken);
+            if (response.status) {
+              setIsModalOpen(false); 
+              // fetchCommodities();
+            }
+            
+          } catch (error) {
+            console.log(error)
+          }
+        }
     }
 })
+const fetchCommodities = async () => {
+  try {
+    const response = await get('/api/v1/commodities', authToken);
+    // if (Array.isArray(response.data)) {
+    //   settableData(response.data);
+    //   console.log(tableData)
+    // }
+    settableData(response.data.map(item => ({
+      id: item.id,
+      CommodityCode: item.gl_code,
+      CommodityName: item.name,
+      CommodityGroup: item.commodity_group_id,
+      DefaultRateby: item.rate_by_id,
+      CommodityStatus: item.active_status
+    })));
+  } catch (error) {
+    console.error('Error fetching commodities:', error);
+  }
+};
+useEffect(() => {
+  if (!isModalOpen) {
+    fetchCommodities();
+  }
+}, [isModalOpen]);
+
+useEffect(() => {
+  fetchCommodities();
+}, []);
 
 
+const handleCheckboxChange = (e) => {
+  const newCheckedValue = !isChecked;
+  setIsChecked(newCheckedValue);
+  setFieldValue('active_status', newCheckedValue);
+};
 
-  const handleCheckboxChange = (e) => {
-    console.log("here")
-    setIsChecked(!isChecked);
-  };
   const openModal = () => {
     setIsModalOpen(true);
+    setCurrentAction("Add")
+    console.log(currentAction)
   };
 
   const closeModal = () => {
     setIsModalOpen(false);
+
   };
 
   return (
@@ -170,14 +275,14 @@ function Commodity() {
           <hr className="mt-12" />
 
 <div className='mt-12'>
-      <DynamicTable headers={headers} data={data}  />
+      <DynamicTable headers={headers} data={tableData} onEdit={handleEditAction} onDelete={handleDeleteAction} />
       </div>
         </div>
       </div>
 
-      <Modal isOpen={isModalOpen} onClose={closeModal}>
+      <Modal isOpen={isModalOpen} onClose={closeModal} >
       <form onSubmit={handleSubmit}>
-          <h1 className='text-3xl font-semibold text-center mb-10'>Add new commodities</h1>
+          <h1 className='text-3xl font-semibold text-center mb-10'> {currentAction === "Add" ? CreateTitle : "Update Commodity"}</h1>
 
         <div className='flex justify-between'>
             <div> 
@@ -231,7 +336,17 @@ function Commodity() {
   id="commodity_group_id"
   name='commodity_group_id'
   values={commodityGroups.map((group) => group.name)}
-  onChange={(value) => setSelectedCommodityGroup(value)}
+  value={commodityGroups.find((group) => group.id === values.commodity_group_id)?.name || ''}
+  onChange={(value) => {
+    const selectedGroup = commodityGroups.find((group) => group.name === value);
+    if (selectedGroup) {
+      setFieldValue('commodity_group_id', selectedGroup.id);
+      setSelectedCommodityGroup(selectedGroup.id);
+    } else {
+      setFieldValue('commodity_group_id', '');
+      setSelectedCommodityGroup('');
+    }
+  }}
   onAddMore={(value) => {
     PostCommodityGroup(value);
   }}
@@ -242,15 +357,26 @@ function Commodity() {
 
 
 <Dropdown
-  id="rate_by"
-  name='rate_by'
+  id="rate_by_id"
+  name='rate_by_id'
   className="float-right"
   values={defaultRate.map((group) => group.name)}
-  onChange={(value) => setSelectedDefaultRate(value)}
+  value={defaultRate.find((group) => group.id === values.rate_by)?.name || ''}
+  onChange={(value) => {
+    const selectedRate = defaultRate.find((group) => group.name === value);
+    if (selectedRate) {
+      setFieldValue('rate_by_id', selectedRate.id);
+      setSelectedDefaultRate(selectedRate.id);
+    } else {
+      setFieldValue('rate_by_id', '');
+      setSelectedDefaultRate('');
+    }
+  }}
   onAddMore={(value) => {
     PostDefaultRate(value);
   }}
 />
+
 
 </div>
 
@@ -262,12 +388,14 @@ function Commodity() {
         >
           <input
             type="checkbox"
-            id="customCheckbox"
+            id="active_status"
             className="form-checkbox text-custom-gray h-4 w-4 rounded "
             checked={isChecked}
+            value={isChecked}
+
             readOnly
           />
-          <label htmlFor="customCheckbox" className="ml-2 text-zinc-600">
+          <label htmlFor="active_status" className="ml-2 text-zinc-600">
           Inactive Commodity
           </label>
         </div>
@@ -286,7 +414,7 @@ function Commodity() {
   type="submit"
   
 >
-  Add Commodity
+{currentAction === "Add" ? "Add Commodity" : "Update Commodity"}
 </button>
 
       </div>
