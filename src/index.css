@@ -24,6 +24,11 @@ input:focus {
   border: 2px solid #17CF98 !important;
   outline: none !important;
 }
+textarea:focus {
+  border: 2px solid #17CF98 !important;
+  outline: none !important;
+}
+
 
 /* Onboarding SignIn */
 .btn_custom {

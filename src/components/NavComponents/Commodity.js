@@ -33,7 +33,8 @@ function Commodity() {
   const [selectedDefaultRate, setSelectedDefaultRate] = useState('');
   const [tableData, settableData] = useState([]);
   const [currentAction, setCurrentAction] = useState("Add");
-
+  const [fetchCommodity, setFetchCommodity] = useState("");
+  const [fetchRate, setFetchRate] = useState("");
 
   const CreateTitle = "Add new commodities"
   const headers = ['Commodity Code / GL Revenue Code', 'Commodity Name', 'Commodity Group' , 'Default Rate by', 'Commodity Status', 'Action' ];
@@ -104,6 +105,7 @@ function Commodity() {
       console.error('Error fetching commodity groups:', error);
     }
   };
+  var updateid;
 
   const handleEditAction = (id) => {
   
@@ -123,16 +125,15 @@ function Commodity() {
       values.gl_code = response.data.gl_code
        values.name = response.data.name
      values.description = response.data.description
-    //  values.commodity_group_id = response.data.commodity_group_id
+     values.commodity_group_id = response.data.commodity_group_id
     //   values.rate_by_id = response.data.rate_by_id
      values.active_status = response.active_status
-    console.log( response.data.commodity_group_id)
-    
+     setFetchCommodity(response.data.commodity_group_id)
+     setFetchRate( response.data.rate_by_id)
     } catch (error) {
       console.error('Error fetching commodity data:', error);
     }
   }
-  var updateid;
   const handleDeleteAction = (id) => {
   console.log(id)
     // Open the modal
@@ -182,6 +183,7 @@ const DeleteDataFromRow = async (id) => {
           }
         }
         else {
+          console.log("id", updateid)
           try {
             const response = await put(`/api/v1/commodities/${updateid}`, data,
             authToken);
@@ -242,7 +244,7 @@ const handleCheckboxChange = (e) => {
     setIsModalOpen(false);
 
   };
-
+  console.log(fetchCommodity)
   return (
     <div className="flex h-screen">
       <div className="p-4 navbar_css border-r">
@@ -317,17 +319,16 @@ const handleCheckboxChange = (e) => {
         </div>
         <div className='flex flex-col justify-around mt-6'>
              <label for="description" className='text-primarytext mb-2'>Description</label>
-
-            <input 
-                id="description"
-                name='description'
-                type="text" 
-                value={values.description}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                placeholder="Enter Commodity Description"
-                 className="px-4 py-2 border border-gray-400 rounded  modal_btn_custom h-32 w-full focus:ring-transparent flex flex-col"
-                  />
+             <textarea 
+    id="description"
+    name='description'
+    type="text" 
+    value={values.description}
+    onChange={handleChange}
+    onBlur={handleBlur}
+    placeholder="Enter Commodity Description"
+    className="px-4 py-2 border border-gray-400 rounded modal_btn_custom h-32 w-full focus:ring-transparent"
+/>
         </div>
         <div className='flex mt-6'>
             <div className='commodity_dropdown_div'>
@@ -350,6 +351,7 @@ const handleCheckboxChange = (e) => {
   onAddMore={(value) => {
     PostCommodityGroup(value);
   }}
+  onFetchedCommodity={fetchCommodity}
 />
 </div>
 <div className='commodity_dropdown_div '>
@@ -375,6 +377,7 @@ const handleCheckboxChange = (e) => {
   onAddMore={(value) => {
     PostDefaultRate(value);
   }}
+  onFetchedRate={fetchRate}
 />
 
 

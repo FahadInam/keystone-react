@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const Dropdown = ({ values, value, onChange, onAddMore }) => {
+const Dropdown = ({ values, value, onChange, onAddMore, onFetchedCommodity, onFetchedRate }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedValue, setSelectedValue] = useState('');
@@ -52,7 +52,7 @@ const Dropdown = ({ values, value, onChange, onAddMore }) => {
       <input
         className="text-left w-11/12 rounded-md border h-12 border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium modal_btn_custom text-gray-700"
         type="text"
-        value={searchTerm || selectedValue} // Change defaultValue to value
+        value={searchTerm || selectedValue || onFetchedCommodity || onFetchedRate } // Change defaultValue to value
         placeholder={selectedValue || 'Select Value'}
         onChange={handleSearchChange}
         onKeyDown={handleKeyDown}
