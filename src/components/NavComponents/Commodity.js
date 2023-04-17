@@ -35,6 +35,8 @@ function Commodity() {
   const [currentAction, setCurrentAction] = useState("Add");
   const [fetchCommodity, setFetchCommodity] = useState("");
   const [fetchRate, setFetchRate] = useState("");
+  const [updateid, setUpdateId] = useState(null);
+
 
   const CreateTitle = "Add new commodities"
   const headers = ['Commodity Code / GL Revenue Code', 'Commodity Name', 'Commodity Group' , 'Default Rate by', 'Commodity Status', 'Action' ];
@@ -105,31 +107,37 @@ function Commodity() {
       console.error('Error fetching commodity groups:', error);
     }
   };
-  var updateid;
 
   const handleEditAction = (id) => {
   
     // Open the modal   
-     updateid = id
-    console.log(updateid)
     setIsModalOpen(true);
+    console.log("hereeee", id)
+    setUpdateId(id);
     setCurrentAction("")
     FetchDataToEdit(id);
 
   };
+
   const FetchDataToEdit = async (id) => {
     try {
       const response = await get(`/api/v1/commodities/${id}` ,
       authToken);
+      console.log(response)
       console.log(response.data.gl_code)
       values.gl_code = response.data.gl_code
        values.name = response.data.name
      values.description = response.data.description
-     values.commodity_group_id = response.data.commodity_group_id
+     values.commodity_group_id = response.data.commodity_group_id.id
+     values.rate_by_id = response.data.rate_by_id.id
+
     //   values.rate_by_id = response.data.rate_by_id
      values.active_status = response.active_status
-     setFetchCommodity(response.data.commodity_group_id)
-     setFetchRate( response.data.rate_by_id)
+     setFetchCommodity(response.data.commodity_group_id.name)
+     setFetchRate( response.data.rate_by_id.name)
+
+     console.log(response.data.rate_by_id.name)
+     
     } catch (error) {
       console.error('Error fetching commodity data:', error);
     }
@@ -154,50 +162,53 @@ const DeleteDataFromRow = async (id) => {
   console.error('Error', error)
 }}
   
-  const {values, errors ,touched ,handleBlur, handleChange, handleSubmit, setFieldValue } = useFormik({
-    
-    initialValues: initialValues,
-    // validationSchema: CommodityValidation,
-    
-    onSubmit: async (values) => {
+const useCustomFormik = (initialValues, currentAction, updateid, authToken, setIsModalOpen) => {
+    return useFormik({
+      initialValues: initialValues,
+      onSubmit: async (values) => {
         const data = {
-            gl_code: values.gl_code,
-            name: values.name,
-            description: values.description,
-            commodity_group_id: values.commodity_group_id,
-            rate_by_id: values.rate_by_id,
-            active_status: values.active_status,
+          gl_code: values.gl_code,
+          name: values.name,
+          description: values.description,
+          commodity_group_id: values.commodity_group_id,
+          rate_by_id: values.rate_by_id,
+          active_status: values.active_status,
         };
-        console.log(data)
-        if(currentAction === "Add") {
-        try {
-            const response = await post('/api/v1/commodities', data,
-            authToken);
-            if (response.status) {
-              setIsModalOpen(false); 
-              // fetchCommodities();
-            }
-            
-          } catch (error) {
-            console.log(error)
-          }
-        }
-        else {
-          console.log("id", updateid)
+        console.log(data);
+        if (currentAction === 'Add') {
           try {
-            const response = await put(`/api/v1/commodities/${updateid}`, data,
-            authToken);
+            const response = await post('/api/v1/commodities', data, authToken);
             if (response.status) {
-              setIsModalOpen(false); 
-              // fetchCommodities();
+              setIsModalOpen(false);
             }
-            
           } catch (error) {
-            console.log(error)
+            console.log(error);
+          }
+        } else {
+          console.log('id', updateid);
+          try {
+            const response = await put(`/api/v1/commodities/${updateid}`, data, authToken);
+            if (response.status === 200) { // Check for a specific status code
+              setIsModalOpen(false);
+            }
+          } catch (error) {
+            console.error('Error updating the commodity:', error);
           }
         }
-    }
-})
+      },
+    });
+  };
+  const {
+    values,
+    errors,
+    touched,
+    handleBlur,
+    handleChange,
+    handleSubmit,
+    setFieldValue,
+  } = useCustomFormik(initialValues, currentAction, updateid, authToken, setIsModalOpen);
+
+
 const fetchCommodities = async () => {
   try {
     const response = await get('/api/v1/commodities', authToken);

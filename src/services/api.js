@@ -38,7 +38,7 @@ const post = async (endpoint, data, authToken) => {
   };
   const put = async (endpoint, data, authToken) => {
     try {
-      const response = await axios.put(endpoint, data, {
+      const response = await instance.put(endpoint, data, {
         headers: {
           'Authorization': `Bearer ${authToken}`,
         },
@@ -49,6 +49,7 @@ const post = async (endpoint, data, authToken) => {
       throw error;
     }
   };
+  
   const deleteRequest  = async (url, authToken) => {
     try {
       const response = await axios.delete(url, {
