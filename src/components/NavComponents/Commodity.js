@@ -35,6 +35,8 @@ function Commodity() {
   const [currentAction, setCurrentAction] = useState("Add");
   const [fetchCommodity, setFetchCommodity] = useState("");
   const [fetchRate, setFetchRate] = useState("");
+  const [fetchStatus, setfetchStatus] = useState("");
+
   const [updateid, setUpdateId] = useState(null);
 
 
@@ -112,7 +114,6 @@ function Commodity() {
   
     // Open the modal   
     setIsModalOpen(true);
-    console.log("hereeee", id)
     setUpdateId(id);
     setCurrentAction("")
     FetchDataToEdit(id);
@@ -124,20 +125,28 @@ function Commodity() {
       const response = await get(`/api/v1/commodities/${id}` ,
       authToken);
       console.log(response)
-      console.log(response.data.gl_code)
       values.gl_code = response.data.gl_code
        values.name = response.data.name
      values.description = response.data.description
      values.commodity_group_id = response.data.commodity_group_id.id
      values.rate_by_id = response.data.rate_by_id.id
-
     //   values.rate_by_id = response.data.rate_by_id
-     values.active_status = response.active_status
+    // response.active_status
+    
      setFetchCommodity(response.data.commodity_group_id.name)
      setFetchRate( response.data.rate_by_id.name)
+    //  setfetchStatus(response.data.active_status)
 
-     console.log(response.data.rate_by_id.name)
-     
+     if(response.data.active_status === "Active")
+     {
+      values.active_status = false
+    }
+    else{
+      values.active_status = true
+
+    }
+    //  console.log(fetchStatus)
+
     } catch (error) {
       console.error('Error fetching commodity data:', error);
     }
@@ -161,53 +170,58 @@ const DeleteDataFromRow = async (id) => {
 {
   console.error('Error', error)
 }}
-  
-const useCustomFormik = (initialValues, currentAction, updateid, authToken, setIsModalOpen) => {
-    return useFormik({
-      initialValues: initialValues,
-      onSubmit: async (values) => {
-        const data = {
-          gl_code: values.gl_code,
-          name: values.name,
-          description: values.description,
-          commodity_group_id: values.commodity_group_id,
-          rate_by_id: values.rate_by_id,
-          active_status: values.active_status,
-        };
-        console.log(data);
-        if (currentAction === 'Add') {
-          try {
-            const response = await post('/api/v1/commodities', data, authToken);
-            if (response.status) {
-              setIsModalOpen(false);
-            }
-          } catch (error) {
-            console.log(error);
-          }
-        } else {
-          console.log('id', updateid);
-          try {
-            const response = await put(`/api/v1/commodities/${updateid}`, data, authToken);
-            if (response.status === 200) { // Check for a specific status code
-              setIsModalOpen(false);
-            }
-          } catch (error) {
-            console.error('Error updating the commodity:', error);
-          }
+const useCustomFormik = (initialValues, currentAction, updateid, authToken) => {
+  const formik = useFormik({
+    initialValues: initialValues,
+    onSubmit: async (values, { resetForm }) => {
+            const data = {
+        gl_code: values.gl_code,
+        name: values.name,
+        description: values.description,
+        commodity_group_id: values.commodity_group_id,
+        rate_by_id: values.rate_by_id,
+        active_status: values.active_status,
+      };
+      console.log(data);
+      if (currentAction === 'Add') {
+        try {
+          const response = await post('/api/v1/commodities', data, authToken);
+          if (response.status) {
+            setIsModalOpen(false);
+            resetForm();     
+               }
+        } catch (error) {
+          console.log(error);
         }
-      },
-    });
-  };
-  const {
-    values,
-    errors,
-    touched,
-    handleBlur,
-    handleChange,
-    handleSubmit,
-    setFieldValue,
-  } = useCustomFormik(initialValues, currentAction, updateid, authToken, setIsModalOpen);
+      } else {
+        console.log('id', updateid);
+        try {
+          const response = await put(`/api/v1/commodities/${updateid}`, data, authToken);
+          if (response.status) { // Check for a specific status code
+            setIsModalOpen(false);
+            resetForm();    
+                }
+        } catch (error) {
+          console.error('Error updating the commodity:', error);
+        }
+      }
+    },
+  });
 
+  return formik;
+};
+
+const formik = useCustomFormik(initialValues, currentAction, updateid, authToken);
+const {
+  values,
+  errors,
+  touched,
+  handleBlur,
+  handleChange,
+  handleSubmit,
+  setFieldValue,
+  resetForm
+} = formik;
 
 const fetchCommodities = async () => {
   try {
@@ -253,9 +267,9 @@ const handleCheckboxChange = (e) => {
 
   const closeModal = () => {
     setIsModalOpen(false);
+    resetForm();
 
   };
-  console.log(fetchCommodity)
   return (
     <div className="flex h-screen">
       <div className="p-4 navbar_css border-r">
@@ -300,7 +314,7 @@ const handleCheckboxChange = (e) => {
         <div className='flex justify-between'>
             <div> 
                 
-            <label for="gl_code" className='text-primarytext mb-2'>Commodity Code</label>
+            <label htmlFor="gl_code" className='text-primarytext mb-2'>Commodity Code</label>
 
             <input 
                 id="gl_code"
@@ -314,7 +328,7 @@ const handleCheckboxChange = (e) => {
                   />
             </div>
             <div> 
-            <label for="name" className='text-primarytext mb-2'>Commodity Name</label>
+            <label htmlFor="name" className='text-primarytext mb-2'>Commodity Name</label>
 
             <input 
                 id="name"
@@ -329,7 +343,7 @@ const handleCheckboxChange = (e) => {
             </div>
         </div>
         <div className='flex flex-col justify-around mt-6'>
-             <label for="description" className='text-primarytext mb-2'>Description</label>
+             <label htmlFor="description" className='text-primarytext mb-2'>Description</label>
              <textarea 
     id="description"
     name='description'

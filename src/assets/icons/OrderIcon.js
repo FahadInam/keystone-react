@@ -1,6 +1,6 @@
 import * as React from "react"
-const OrderIcon = (props) => (
-  <svg xmlns="http://www.w3.org/2000/svg" fill="none" {...props}>
+const OrderIcon = ({ height, width, ...props }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" style={{ height: height ? `${height}rem` : undefined, width: width ? `${width}rem` : undefined }} {...props}>
     <path
       fill="#4B5563"
       d="m2.504 14.413 4.28 2.701 4.278-2.701v-2.391H10.5v2.08l-3.436 2.17v-4.107l1.219.7 4.599-2.638-3.84-2.122-2.26-1.25-6.097 3.372 1.82 1.044v3.142Zm.563-2.82 2.216 1.271 1.219-.699v4.107l-3.436-2.17v-2.509Zm5.218.623-.938-.537 3.436-1.968.953.526-3.451 1.98ZM8.19 8.275l.57.315 1.45.801-3.425 1.964L3.36 9.391l3.423-1.89 1.407.774ZM2.783 9.71l3.436 1.968-.938.537-3.45-1.98.952-.525Z"
