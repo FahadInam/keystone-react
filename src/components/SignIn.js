@@ -85,8 +85,7 @@ function Signin() {
         const lastname = response.data.user.lastname;
     
         saveToLocalStorage(id, token, firstname, lastname);
-        console.log(response.data.user.company.companyname)
-        if (response.data.user.company.companyname === null) {
+        if (response.data.company.companyname === null) {
           navigate('/companyonboard');
         } else {
           navigate('/invite');

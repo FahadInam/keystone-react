@@ -261,3 +261,14 @@ box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
 .table-custom tbody tr:first-child td {
   padding-top: 2rem; /* Adjust this value to your desired spacing */
 }
+
+.alert_success {
+  background: rgba(186, 232, 182, 0.23);
+  border: 1px solid #40D437;
+  border-radius: 8px;
+}
+.alert_fail {
+  background: rgba(255, 0, 0, 0.1);
+  border: 1px solid #FF0000;    
+  border-radius: 8px;
+}

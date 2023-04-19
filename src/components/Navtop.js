@@ -19,7 +19,7 @@ function Navtop() {
                 <div className=' flex justify-center items-center mr-5'>
                 <div className="vertical-line mr-8  "></div>
                 {/* <img src={helpicon} className='mr-2' /> */}
-                <HelpIcon height="2rem" width="2rem" className='mr-2 help'/>
+                <HelpIcon  className='mr-2 help'/>
                 <span>Help</span>
                 </div>
               </div>

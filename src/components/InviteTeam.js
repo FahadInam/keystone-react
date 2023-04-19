@@ -1,4 +1,5 @@
 import React from 'react';
+import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import logo from '../assets/Logo.png';
 import companyimage from '../assets/teamimage.png';
@@ -9,6 +10,8 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import Alert from '../components/smallcomponents/Alert';
+import { post  } from "../../src/services/api";
+
 const options = ["User", "Admin"]; 
 
 const initialValues = {
@@ -21,6 +24,14 @@ function InviteTeam() {
   const [alert, setAlert] = useState({ show: false, message: '', type: 'success' });
     const navigate = useNavigate();
 
+    useEffect(() => {
+      if (alert.show) {
+        const timer = setTimeout(() => {
+          setAlert({ ...alert, show: false });
+        }, 3000);
+        return () => clearTimeout(timer);
+      }
+    }, [alert.show]);
   const { values, errors, touched,  handleBlur,   handleChange,  handleSubmit, setFieldValue, setFieldTouched } = useFormik({
     initialValues: initialValues,
     validationSchema: InviteValidation,
@@ -34,16 +45,9 @@ function InviteTeam() {
       const authToken = localStorage.getItem('authToken');
       console.log(authToken)
       try {
-        const response = await axios.post(
-          `http://192.168.18.43:8000/api/v1/invites`,
-          data,
-          {
-            headers: {
-              'Authorization': `Bearer ${authToken}`
-            },
-          }
-        );
-        setAlert({ show: true, message: 'Invitation Sent!', type: 'success' });
+          const response = await post('/api/v1/invites', data, authToken);
+        setAlert({ show: true, message: 'Invite Sent Successfully!', type: 'success'  });
+        console.log(alert);
                 // navigate('/dashboard');
       } catch (error) {
         console.log(error)

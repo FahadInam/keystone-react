@@ -11,6 +11,7 @@ import  { useEffect } from 'react';
 import { post  } from "../../services/api";
 import { deleteRequest  } from "../../services/api";
 import { put  } from "../../services/api";
+import Alert from '../smallcomponents/Alert';
 
 import DynamicTable from '../Table/DynamicTable';
 const initialValues = {
@@ -36,6 +37,7 @@ function Commodity() {
   const [fetchCommodity, setFetchCommodity] = useState("");
   const [fetchRate, setFetchRate] = useState("");
   const [fetchStatus, setfetchStatus] = useState("");
+  const [alert, setAlert] = useState({ show: false, message: '', type: 'success' });
 
   const [updateid, setUpdateId] = useState(null);
 
@@ -188,6 +190,7 @@ const useCustomFormik = (initialValues, currentAction, updateid, authToken) => {
           const response = await post('/api/v1/commodities', data, authToken);
           if (response.status) {
             setIsModalOpen(false);
+            setAlert({ show: true, message: 'Commodity Added Successfully!', type: 'success'  });
             resetForm();     
                }
         } catch (error) {
@@ -199,6 +202,8 @@ const useCustomFormik = (initialValues, currentAction, updateid, authToken) => {
           const response = await put(`/api/v1/commodities/${updateid}`, data, authToken);
           if (response.status) { // Check for a specific status code
             setIsModalOpen(false);
+            values.gl_code = ""
+
             resetForm();    
                 }
         } catch (error) {
@@ -270,6 +275,7 @@ const handleCheckboxChange = (e) => {
     resetForm();
 
   };
+  
   return (
     <div className="flex h-screen">
       <div className="p-4 navbar_css border-r">
@@ -302,6 +308,12 @@ const handleCheckboxChange = (e) => {
           <hr className="mt-12" />
 
 <div className='mt-12'>
+<Alert
+        show={alert.show}
+        message={alert.message}
+        type={alert.type}
+        onClose={() => setAlert({ ...alert, show: false })}
+      />
       <DynamicTable headers={headers} data={tableData} onEdit={handleEditAction} onDelete={handleDeleteAction} />
       </div>
         </div>

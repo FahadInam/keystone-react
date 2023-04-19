@@ -25,7 +25,7 @@ function Navbar() {
             `flex mb-2 py-3 nav-opt ${isActive ? "selected-option" : ""}`
           }
         >
-          <OrderIcon height={1.5} width={1.5} id="nav_icon" />
+          <OrderIcon  id="nav_icon" />
 
           <span className="font-medium text-2xl text-NavBarText pl-2 leading-6 custom-link">
             Order
@@ -37,7 +37,7 @@ function Navbar() {
             `flex mb-2 py-3 nav-opt ${isActive ? "selected-option" : ""}`
           }
         >
-          <ShipmentIcon height={1.5} width={1.5} id="nav_icon" />
+          <ShipmentIcon  id="nav_icon" />
           <span className="font-medium text-2xl text-NavBarText pl-2 leading-6 custom-link">
             Shipment
           </span>
@@ -48,7 +48,7 @@ function Navbar() {
             `flex mb-2 py-3 nav-opt ${isActive ? "selected-option" : ""}`
           }
         >
-          <CustomerIcon height={1.5} width={1.5} id="nav_icon" />
+          <CustomerIcon  id="nav_icon" />
           <span className="font-medium text-2xl text-NavBarText pl-2 leading-6 custom-link">
             Customer
           </span>
@@ -59,7 +59,7 @@ function Navbar() {
             `flex mb-2 py-3 nav-opt ${isActive ? "selected-option" : ""}`
           }
         >
-          <EquipmentIcon height={1.5} width={1.5} id="nav_icon" />
+          <EquipmentIcon  id="nav_icon" />
           <span className="font-medium text-2xl text-NavBarText pl-2 leading-6 custom-link">
             Equipment
           </span>
@@ -70,7 +70,7 @@ function Navbar() {
             `flex mb-2 py-3 nav-opt  ${isActive ? "selected-option" : ""}`
           }
         >
-          <CommodityIcon height={1.5} width={1.5} id="nav_icon" 
+          <CommodityIcon id="nav_icon" 
           className={({ isActive }) => (isActive ? "icon-option" : "")}
         
         />
@@ -84,7 +84,7 @@ function Navbar() {
             `flex mb-2 py-3 nav-opt ${isActive ? "selected-option " : ""}`
           }
         >
-          <InviteIcon height={1.5} width={1.5} id="nav_icon" />
+          <InviteIcon  id="nav_icon" />
           <span className="font-medium text-2xl text-NavBarText pl-2 leading-6 custom-link">
           Invite Team
           </span>
@@ -93,7 +93,7 @@ function Navbar() {
       
       <div>
         <div className="flex mb-4 py-3 nav-opt">
-          <SettingIcon height={1.5} width={1.5} id="nav_icon" />
+          <SettingIcon  id="nav_icon" />
           <NavLink
             to="/settings"
             className={({ isActive }) =>
